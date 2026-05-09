@@ -47,6 +47,40 @@
     color: var(--dark-color) !important;
 }
 
+.text-secondary {
+    color: var(--secondary-text) !important;
+}
+
+/* Accordion Theme Fixes */
+.accordion-item {
+    background-color: var(--white);
+    border-color: var(--border-color);
+}
+
+.accordion-button {
+    background-color: var(--white);
+    color: var(--dark-color);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--white);
+    color: var(--dark-color);
+    box-shadow: none;
+}
+
+.accordion-button::after {
+    filter: var(--dark-mode-invert);
+}
+
+[data-theme="dark"] .accordion-button::after {
+    filter: invert(1) brightness(2);
+}
+
+.accordion-body {
+    background-color: var(--white);
+    color: var(--secondary-text);
+}
+
 
 /* Global Styles */
 html,
@@ -324,7 +358,7 @@ h6 {
 /* Hero Section */
 .sync-header-footer {
     background-color: var(--white) !important;
-    background-image: 
+    background-image:
         radial-gradient(circle at 10% 20%, rgba(0, 86, 179, 0.05) 0%, transparent 50%),
         radial-gradient(circle at 90% 80%, rgba(0, 86, 179, 0.05) 0%, transparent 50%) !important;
     color: var(--dark-color) !important;
@@ -1124,12 +1158,14 @@ h6 {
     display: block;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #ffffff; /* Improved visibility on dark bg */
+    color: #ffffff;
+    /* Improved visibility on dark bg */
     letter-spacing: -0.01em;
 }
 
 [data-theme="dark"] .contact-value {
-    color: #ffffff; /* Better for dark mode */
+    color: #ffffff;
+    /* Better for dark mode */
 }
 
 /* Ensure the contact items are well-spaced */
@@ -1321,7 +1357,7 @@ h6 {
     .dashboard-main {
         padding: 1rem;
     }
-    
+
     .dashboard-main header {
         margin-bottom: 2rem !important;
     }
@@ -1459,7 +1495,8 @@ h6 {
 
 .table-technical {
     width: 100%;
-    min-width: 800px; /* Force horizontal scroll on small screens */
+    min-width: 800px;
+    /* Force horizontal scroll on small screens */
     border-collapse: separate;
     border-spacing: 0;
 }
@@ -2008,7 +2045,7 @@ h6 {
 }
 
 /* Ensure icons inherit the hover color and transitions */
-#themeToggle i, 
+#themeToggle i,
 #themeToggleMobile i {
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -2204,6 +2241,13 @@ h6 {
     width: max-content;
 }
 
+@media (max-width: 991px) {
+    .gallery-scroller {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
 .gallery-item-premium {
     width: 450px;
     max-width: 85vw;
@@ -2224,6 +2268,43 @@ h6 {
 
 .world-map-visual:hover {
     background: rgba(255, 255, 255, 0.05);
+}
+
+/* Region Badges */
+.region-badge {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 24px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: default;
+}
+
+.region-badge::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: #ffffff;
+    opacity: 0.4;
+    transition: var(--transition);
+}
+
+.region-badge:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-3px);
+}
+
+.region-badge:hover::before {
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
 }
 
 /* Footer Enhancements */
@@ -2283,4 +2364,4 @@ h6 {
 [data-theme="dark"] .footer-section .social-icon:hover {
     background-color: var(--white) !important;
     color: var(--dark-color) !important;
-}
+}
