@@ -136,24 +136,74 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Active Link Highlighting Sync
-    const refreshScrollSpy = () => {
-        const spyBody = bootstrap.ScrollSpy.getInstance(document.body);
-        if (spyBody) {
-            spyBody.refresh();
+    // --- Custom ScrollSpy & Nav Indicator Logic ---
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    const sections = Array.from(navLinks).map(link => document.querySelector(link.getAttribute('href'))).filter(s => s);
+    const navIndicator = document.querySelector('.nav-indicator');
+
+    const updateNavIndicator = (activeLink) => {
+        if (!navIndicator || !activeLink || window.innerWidth <= 1100) return;
+
+        const linkRect = activeLink.getBoundingClientRect();
+        const navRect = activeLink.closest('.navbar-nav').getBoundingClientRect();
+
+        navIndicator.style.width = `${linkRect.width - 20}px`;
+        navIndicator.style.left = `${linkRect.left - navRect.left + 10}px`;
+        navIndicator.classList.add('active');
+    };
+
+    const setActiveLink = (id) => {
+        let activeLink = null;
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${id}`) {
+                link.classList.add('active');
+                activeLink = link;
+            }
+        });
+
+        if (activeLink) {
+            updateNavIndicator(activeLink);
+        } else {
+            navIndicator?.classList.remove('active');
         }
     };
 
-    // Refresh on load and images load
-    window.addEventListener('load', () => {
-        // Initial refresh
-        refreshScrollSpy();
-        // Delayed refresh for dynamic content/images
-        setTimeout(refreshScrollSpy, 500);
-        setTimeout(refreshScrollSpy, 1500); // Secondary safety check
+    // Intersection Observer Options
+    const spyOptions = {
+        root: null,
+        rootMargin: '-20% 0px -70% 0px', // Adjusted for better detection
+        threshold: 0
+    };
+
+    const spyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setActiveLink(entry.target.id);
+            }
+        });
+    }, spyOptions);
+
+    sections.forEach(section => spyObserver.observe(section));
+
+    // Handle Manual Scroll Updates (for very fast scrolling)
+    window.addEventListener('scroll', () => {
+        if (window.scrollY < 100) {
+            setActiveLink(sections[0]?.id);
+        }
     });
 
-    window.addEventListener('resize', refreshScrollSpy);
+    // Handle Resize for indicator position
+    window.addEventListener('resize', () => {
+        const activeLink = document.querySelector('.navbar-nav .nav-link.active');
+        if (activeLink) updateNavIndicator(activeLink);
+    });
+
+    // Initial check
+    setTimeout(() => {
+        const activeLink = document.querySelector('.navbar-nav .nav-link.active');
+        if (activeLink) updateNavIndicator(activeLink);
+    }, 100);
 
     // Password Visibility Toggle
     const eyeButtons = document.querySelectorAll('.btn-eye');
