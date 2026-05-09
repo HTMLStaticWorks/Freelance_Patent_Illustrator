@@ -22,9 +22,14 @@
 
 <body>
 
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="dashboard-sidebar">
+            <button class="btn sidebar-close d-lg-none" id="sidebarClose" title="Close Sidebar">
+                <i class="bi bi-x-lg"></i>
+            </button>
             <div class="sidebar-logo mb-4">
                 <a href="index.html" class="text-decoration-none">
                     <svg width="180" height="45" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +125,7 @@
                     <div class="dropdown">
                         <button class="btn btn-dark rounded-0 dropdown-toggle px-3" type="button"
                             data-bs-toggle="dropdown">
-                            <i class="bi bi-plus-lg me-2"></i> NEW PROJECT
+                            <i class="bi bi-plus-lg me-2"></i> <span>NEW PROJECT</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end rounded-0 border-dark shadow-sm">
                             <li><a class="dropdown-item" href="#" data-tab="upload">Utility Patent</a></li>
@@ -167,42 +172,64 @@
                 </div>
 
                 <h5 class="fw-bold mb-4">Recent Activity</h5>
-                <div class="table-responsive bg-white border border-dark border-opacity-10 shadow-sm">
-                    <table class="table-technical mb-0">
-                        <thead>
-                            <tr>
-                                <th>Project Name</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>USPTO Status</th>
-                                <th>Last Update</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="fw-bold">Mechanical Gear Assembly</td>
-                                <td>Utility</td>
-                                <td><span class="status-badge status-completed">Completed</span></td>
-                                <td><span class="text-success small"><i
-                                            class="bi bi-check-circle-fill me-1"></i>Filed</span></td>
-                                <td class="small text-muted">2 hours ago</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Ergonomic Mouse Design</td>
-                                <td>Design</td>
-                                <td><span class="status-badge status-progress">In Progress</span></td>
-                                <td><span class="text-muted small">Drafting</span></td>
-                                <td class="small text-muted">Yesterday</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Solar Array Logic</td>
-                                <td>Utility</td>
-                                <td><span class="status-badge status-pending">Awaiting Review</span></td>
-                                <td><span class="text-muted small">-</span></td>
-                                <td class="small text-muted">May 5, 2026</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row g-4">
+                    <!-- Activity Card 1 -->
+                    <div class="col-md-6 col-xl-4">
+                        <div class="stat-card p-0 overflow-hidden">
+                            <div class="p-3 border-bottom border-dark border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="x-small text-muted text-uppercase fw-bold">Utility</span>
+                                    <span class="status-badge status-completed">Completed</span>
+                                </div>
+                                <h6 class="fw-bold mb-1">Mechanical Gear Assembly</h6>
+                                <p class="x-small text-muted mb-0"><i class="bi bi-clock me-1"></i>2 hours ago</p>
+                            </div>
+                            <div class="p-3 bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="x-small fw-bold text-uppercase tracking-widest">USPTO Status</span>
+                                    <span class="text-success x-small fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Filed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Activity Card 2 -->
+                    <div class="col-md-6 col-xl-4">
+                        <div class="stat-card p-0 overflow-hidden">
+                            <div class="p-3 border-bottom border-dark border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="x-small text-muted text-uppercase fw-bold">Design</span>
+                                    <span class="status-badge status-progress">In Progress</span>
+                                </div>
+                                <h6 class="fw-bold mb-1">Ergonomic Mouse Design</h6>
+                                <p class="x-small text-muted mb-0"><i class="bi bi-clock me-1"></i>Yesterday</p>
+                            </div>
+                            <div class="p-3 bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="x-small fw-bold text-uppercase tracking-widest">USPTO Status</span>
+                                    <span class="text-muted x-small fw-bold">Drafting</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Activity Card 3 -->
+                    <div class="col-md-6 col-xl-4">
+                        <div class="stat-card p-0 overflow-hidden">
+                            <div class="p-3 border-bottom border-dark border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="x-small text-muted text-uppercase fw-bold">Utility</span>
+                                    <span class="status-badge status-pending">Awaiting Review</span>
+                                </div>
+                                <h6 class="fw-bold mb-1">Solar Array Logic</h6>
+                                <p class="x-small text-muted mb-0"><i class="bi bi-clock me-1"></i>May 5, 2026</p>
+                            </div>
+                            <div class="p-3 bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="x-small fw-bold text-uppercase tracking-widest">USPTO Status</span>
+                                    <span class="text-muted x-small fw-bold">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -303,38 +330,49 @@
             <!-- Invoices Tab (Initially Hidden) -->
             <div id="invoices" class="dashboard-tab d-none">
                 <h5 class="fw-bold mb-4">Billing & Invoices</h5>
-                <div class="table-responsive bg-white border border-dark border-opacity-10 shadow-sm">
-                    <table class="table-technical mb-0">
-                        <thead>
-                            <tr>
-                                <th>Invoice ID</th>
-                                <th>Project</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="fw-bold">#INV-2026-001</td>
-                                <td>Gear Assembly</td>
-                                <td class="fw-bold">$400.00</td>
-                                <td class="small">May 1, 2026</td>
-                                <td><span class="status-badge status-completed">Paid</span></td>
-                                <td><button class="btn btn-outline-dark btn-sm rounded-0"><i
-                                            class="bi bi-download"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">#INV-2026-004</td>
-                                <td>Mouse Design</td>
-                                <td class="fw-bold">$840.00</td>
-                                <td class="small">May 6, 2026</td>
-                                <td><span class="status-badge status-pending">Unpaid</span></td>
-                                <td><button class="btn btn-dark btn-sm rounded-0 fw-bold">PAY NOW</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row g-4">
+                    <!-- Invoice Card 1 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="stat-card p-0 overflow-hidden">
+                            <div class="p-3 border-bottom border-dark border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="x-small text-muted fw-bold">#INV-2026-001</span>
+                                    <span class="status-badge status-completed">Paid</span>
+                                </div>
+                                <h6 class="fw-bold mb-1">Gear Assembly</h6>
+                                <p class="x-small text-muted mb-0">May 1, 2026</p>
+                            </div>
+                            <div class="p-3 bg-light d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="x-small text-muted d-block">Amount</span>
+                                    <span class="fw-bold">$400.00</span>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm rounded-0" title="Download Invoice">
+                                    <i class="bi bi-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Invoice Card 2 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="stat-card p-0 overflow-hidden">
+                            <div class="p-3 border-bottom border-dark border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="x-small text-muted fw-bold">#INV-2026-004</span>
+                                    <span class="status-badge status-pending">Unpaid</span>
+                                </div>
+                                <h6 class="fw-bold mb-1">Mouse Design</h6>
+                                <p class="x-small text-muted mb-0">May 6, 2026</p>
+                            </div>
+                            <div class="p-3 bg-light d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="x-small text-muted d-block">Amount</span>
+                                    <span class="fw-bold">$840.00</span>
+                                </div>
+                                <button class="btn btn-dark btn-sm rounded-0 fw-bold px-3">PAY NOW</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

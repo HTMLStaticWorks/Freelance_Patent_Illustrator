@@ -250,12 +250,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Dashboard Sidebar Toggle
 const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebarClose = document.getElementById('sidebarClose');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
 const dashboardSidebar = document.querySelector('.dashboard-sidebar');
 
-if (sidebarToggle && dashboardSidebar) {
-    sidebarToggle.addEventListener('click', () => {
+const toggleSidebar = () => {
+    if (dashboardSidebar && sidebarOverlay) {
         dashboardSidebar.classList.toggle('active');
-    });
+        sidebarOverlay.classList.toggle('active');
+    }
+};
+
+const closeSidebar = () => {
+    if (dashboardSidebar && sidebarOverlay) {
+        dashboardSidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+    }
+};
+
+if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', toggleSidebar);
+}
+
+if (sidebarClose) {
+    sidebarClose.addEventListener('click', closeSidebar);
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
 }
 
 // Dashboard Tab Switching
@@ -282,7 +304,7 @@ if (dashboardNavLinks.length > 0) {
 
             // Close sidebar on mobile after clicking
             if (window.innerWidth < 992) {
-                dashboardSidebar.classList.remove('active');
+                closeSidebar();
             }
         });
     });
