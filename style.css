@@ -1731,6 +1731,7 @@ h6 {
 
 .btn-signin:hover {
     background: #1e293b;
+    color: #8999dd !important;
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
@@ -1814,7 +1815,7 @@ h6 {
 
 [data-theme="dark"] .btn-signin:hover {
     background-color: #e2e8f0 !important;
-    color: #0f172a !important;
+    color: #678ada !important;
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
