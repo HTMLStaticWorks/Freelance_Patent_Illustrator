@@ -85,7 +85,7 @@
 /* Global Styles */
 html,
 body {
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     position: relative;
 }
@@ -1310,6 +1310,47 @@ h6 {
     transition: var(--transition);
 }
 
+/* Premium Dashboard Header (Sticky & Beautiful) */
+.dashboard-header {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    background: var(--light-bg);
+    padding: 1.25rem 0 1rem 0; /* Reduced padding for a sleeker compact height */
+    margin-top: -2rem; /* Sit flush with the top of the main container */
+    margin-bottom: 1.5rem !important; /* Reduced bottom spacing */
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-header.scrolled-header {
+    background: rgba(248, 248, 248, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    padding: 0.75rem 0 0.6rem 0; /* Sleek, extremely thin scrolled look */
+}
+
+[data-theme="dark"] .dashboard-header.scrolled-header {
+    background: rgba(26, 26, 26, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#demo-mode-badge {
+    transition: var(--transition);
+}
+
+#demo-mode-badge:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+/* Ensure no round pill styling on dashboard header badge */
+.dashboard-header .badge {
+    border-radius: 0 !important;
+}
+
 /* Sidebar Overlay */
 .sidebar-overlay {
     position: fixed;
@@ -1362,7 +1403,7 @@ h6 {
         padding: 1.5rem;
     }
 
-    .dashboard-main header h4 {
+    .dashboard-header .dashboard-title {
         font-size: 1.25rem;
     }
 }
@@ -1399,16 +1440,16 @@ h6 {
         padding: 1rem;
     }
 
-    .dashboard-main header {
+    .dashboard-header {
         margin-bottom: 2rem !important;
     }
 
-    .dashboard-main header .btn {
+    .dashboard-header .btn {
         padding: 0.5rem 0.75rem !important;
         font-size: 0.75rem;
     }
 
-    .dashboard-main header .btn span {
+    .dashboard-header .btn span {
         display: none;
     }
 }
@@ -3094,6 +3135,56 @@ h6 {
     }
 }
 
+/* Dashboard Header Responsive Side-by-Side Flex Layout */
+@media (max-width: 768px) {
+    .dashboard-header {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important; /* Force all elements to stay on the same line */
+        gap: 8px !important;
+        margin-top: -1.5rem !important;
+        padding-top: 1.5rem !important;
+        margin-bottom: 1.25rem !important;
+    }
+
+    .header-title-area {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-shrink: 1 !important;
+        min-width: 0 !important; /* Enable container shrink to allow child wrapping */
+    }
+
+    .header-title-area h4 {
+        font-size: 1.15rem !important;
+        line-height: 1.2 !important;
+        white-space: normal !important; /* Allow text wrapping so other elements fit on same row */
+        max-width: 140px !important; /* Force text wrapping on mobile */
+        min-width: 0 !important; /* Allow text element to shrink */
+    }
+
+    #demo-mode-badge {
+        font-size: 0.65rem !important;
+        padding: 0.2rem 0.5rem !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .header-actions-area {
+        display: flex !important;
+        justify-content: flex-end !important;
+        flex-shrink: 0 !important;
+    }
+
+    .header-actions-area .btn {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.78rem !important;
+    }
+}
+
 /* =========================================
    MOBILE RESPONSIVE FIXES
    300px → 600px
@@ -3103,7 +3194,7 @@ h6 {
 
     /* Global */
     body, html {
-        overflow-x: hidden !important;
+        overflow-x: clip !important;
         width: 100% !important;
         position: relative !important;
     }
@@ -3112,7 +3203,7 @@ h6 {
         padding: 12px !important;
         width: 100% !important;
         max-width: 100% !important;
-        overflow-x: hidden !important;
+        overflow-x: clip !important;
     }
 
     .container,
@@ -3140,66 +3231,31 @@ h6 {
         width: 260px !important;
     }
 
-    /* Dashboard Header Specific Fix */
-    .dashboard-main header {
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        justify-content: space-between !important;
-        align-items: center !important;
+    /* Dashboard Header Tiny Screen Optimizations */
+    .dashboard-header {
+        margin-top: -12px !important;
+        padding-top: 12px !important;
+        margin-bottom: 1.25rem !important;
         gap: 6px !important;
     }
 
-    .dashboard-main header .d-flex.align-items-center.gap-3:first-child {
-        flex-wrap: nowrap !important;
+    .header-title-area {
         gap: 6px !important;
-        width: auto !important;
     }
 
-    .dashboard-main header .d-flex.align-items-center.gap-3:last-child {
-        width: auto !important;
-        margin-left: auto !important;
-    }
-
-    .dashboard-main header h4 {
-        font-size: 0.95rem !important;
-        max-width: 75px !important;
-        line-height: 1.2 !important;
-        margin-bottom: 0 !important;
+    .header-title-area h4 {
+        font-size: 1.02rem !important;
+        max-width: 120px !important; /* Force tighter wrapping on extra-narrow screens */
     }
 
     #demo-mode-badge {
         font-size: 0.58rem !important;
         padding: 0.15rem 0.4rem !important;
-        white-space: nowrap !important;
-        border-radius: 8px !important;
-        margin-top: 0 !important;
-        gap: 3px !important;
     }
 
-    .dashboard-main header .dropdown {
-        width: auto !important;
-    }
-
-    .dashboard-main header .dropdown .btn {
-        width: auto !important;
-        padding: 0.35rem 0.65rem !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 3px !important;
-        border-radius: 20px !important;
-        white-space: nowrap !important;
-    }
-
-    .dashboard-main header .dropdown .btn span {
-        font-size: 0 !important;
-    }
-
-    .dashboard-main header .dropdown .btn span::before {
-        content: "NEW" !important;
-        font-size: 0.68rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.3px !important;
-        display: inline-block !important;
+    .header-actions-area .btn {
+        padding: 0.35rem 0.55rem !important;
+        font-size: 0.72rem !important;
     }
 
     /* Responsive Dashboard Tab Header Stacking (Badge below text) */

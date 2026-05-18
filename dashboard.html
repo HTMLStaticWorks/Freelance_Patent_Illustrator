@@ -426,23 +426,24 @@
         <!-- Main Content -->
         <main class="dashboard-main">
             <!-- Header -->
-            <header class="d-flex justify-content-between align-items-center mb-5">
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-dark d-lg-none rounded-0" id="sidebarToggle">
+            <header class="dashboard-header d-flex justify-content-between align-items-center mb-5">
+                <div class="header-title-area d-flex align-items-center gap-3">
+                    <button class="btn btn-dark d-lg-none rounded-0" id="sidebarToggle" aria-label="Toggle Sidebar">
                         <i class="bi bi-list"></i>
                     </button>
-                    <h4 class="fw-bold mb-0">Project Dashboard</h4>
-                    <span
-                        class="badge bg-dark border border-dark rounded-pill px-3 py-2 fw-bold text-white d-flex align-items-center gap-2"
-                        id="demo-mode-badge"
-                        style="font-size: 0.72rem; letter-spacing: 0.5px; border-color: rgba(255,255,255,0.15) !important;">
-                        <span class="pulse-dot" id="demo-mode-pulse"><i class="bi bi-circle-fill"
-                                style="font-size: 8px;"></i></span>
-                        <span id="demo-mode-text">CLIENT PORTAL</span>
-                    </span>
+                    <h4 class="fw-bold mb-0 dashboard-title">Project Dashboard</h4>
                 </div>
-                <div class="d-flex align-items-center gap-3">
-
+                
+                <span
+                    class="badge bg-dark border border-dark rounded-0 px-3 py-2 fw-bold text-white d-flex align-items-center gap-2 me-auto"
+                    id="demo-mode-badge"
+                    style="font-size: 0.72rem; letter-spacing: 0.5px; border-color: rgba(255,255,255,0.15) !important;">
+                    <span class="pulse-dot" id="demo-mode-pulse"><i class="bi bi-circle-fill"
+                            style="font-size: 8px;"></i></span>
+                    <span id="demo-mode-text">CLIENT PORTAL</span>
+                </span>
+                
+                <div class="header-actions-area">
                     <div class="dropdown">
                         <button class="btn btn-dark rounded-0 dropdown-toggle px-3" type="button"
                             data-bs-toggle="dropdown">

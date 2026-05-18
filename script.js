@@ -14,6 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
         handleScroll(); // Initialize on load
     }
 
+    // Dashboard Header Scroll Effect
+    const dashboardHeader = document.querySelector('.dashboard-header');
+    if (dashboardHeader) {
+        const handleDashboardScroll = () => {
+            if (window.scrollY > 10) {
+                dashboardHeader.classList.add('scrolled-header');
+            } else {
+                dashboardHeader.classList.remove('scrolled-header');
+            }
+        };
+        window.addEventListener('scroll', handleDashboardScroll);
+        handleDashboardScroll(); // Initialize on load
+    }
+
     // Smooth Scrolling for Nav Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
