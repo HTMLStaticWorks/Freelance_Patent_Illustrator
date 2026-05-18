@@ -9,7 +9,7 @@
     --white: #ffffff;
     --border-color: #000000;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --container-max-width: 1140px;
+    --container-max-width: 1280px;
     --navbar-bg: rgba(255, 255, 255, 0.8);
     --logo-guide: #333333;
     --logo-shape: #000000;
@@ -148,17 +148,44 @@ h6 {
 
 /* Navbar */
 .navbar {
-    padding: 30px 0;
+    padding: 15px 0;
     background: transparent;
     transition: var(--transition);
+    z-index: 1050 !important;
 }
 
 .navbar.scrolled {
-    padding: 15px 0;
+    padding: 8px 0;
     background: var(--navbar-bg);
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid var(--border-color);
+}
+
+/* Announcement Bar styling & offsets */
+.top-announcement-bar {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    z-index: 1040;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .navbar {
+        top: 38px;
+    }
+}
+@media (max-width: 767px) {
+    .navbar {
+        top: 0;
+    }
+}
+.navbar.scrolled {
+    top: 0 !important;
 }
 
 .navbar-brand {
@@ -414,7 +441,7 @@ h6 {
     .about-experience {
         position: relative !important;
         bottom: auto !important;
-        end: auto !important;
+        right: auto !important;
         transform: none !important;
         margin-top: -30px;
         margin-left: 20px;
@@ -810,6 +837,12 @@ h6 {
         display: none;
     }
 
+    .navbar-expand-custom .container {
+        flex-wrap: nowrap !important;
+        display: flex !important;
+        align-items: center;
+    }
+
     .navbar-expand-custom .offcanvas {
         position: static;
         visibility: visible;
@@ -820,6 +853,9 @@ h6 {
         width: auto;
         display: flex;
         flex-grow: 1;
+        height: auto !important;
+        flex-basis: auto !important;
+        flex-direction: row !important;
     }
 
     .navbar-expand-custom .offcanvas-header {
@@ -827,10 +863,13 @@ h6 {
     }
 
     .navbar-expand-custom .offcanvas-body {
-        display: flex;
+        display: flex !important;
         padding: 0;
         overflow: visible;
         align-items: center;
+        flex-direction: row !important;
+        width: 100%;
+        flex-grow: 1;
     }
 
     .navbar-expand-custom .navbar-nav {
@@ -2371,4 +2410,598 @@ h6 {
 [data-theme="dark"] .footer-section .social-icon:hover {
     background-color: var(--white) !important;
     color: var(--dark-color) !important;
+}
+
+/* ==========================================================================
+   New Patent Portal Additions & Premium Enhancements
+   ========================================================================== */
+
+/* Top Speed & Compliance Ribbon */
+.top-announcement-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    z-index: 1040;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: #0d0d0d !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: var(--transition);
+}
+
+.navbar.fixed-top {
+    top: 40px;
+    transition: var(--transition);
+}
+
+.navbar.fixed-top.scrolled {
+    top: 0;
+}
+
+/* Offcanvas and main page alignment overrides when announcement is present */
+@media (max-width: 767.98px) {
+    .top-announcement-bar {
+        display: none !important;
+    }
+
+    .navbar.fixed-top {
+        top: 0 !important;
+    }
+}
+
+/* Portal Step Cards */
+.portal-step-card {
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.3s ease;
+}
+
+.portal-step-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    border-color: var(--dark-color) !important;
+}
+
+[data-theme="dark"] .portal-step-card {
+    background-color: #1a1a1a !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .portal-step-card:hover {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* Premium Icon Boxes */
+.portal-step-card .icon-box {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.portal-step-card:hover .icon-box {
+    background: var(--dark-color);
+    color: var(--white);
+    border-color: var(--dark-color);
+}
+
+[data-theme="dark"] .portal-step-card .icon-box {
+    background: #262626;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .portal-step-card:hover .icon-box {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* Compliance Checklist Elements */
+.icon-box-sm {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .icon-box-sm {
+    background: #262626;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #standards-checklist {
+    background-color: #0f0f0f !important;
+}
+
+[data-theme="dark"] #standards-checklist .bg-light {
+    background-color: #161616 !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] #standards-checklist h5,
+[data-theme="dark"] #standards-checklist h6 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #standards-checklist .border-bottom {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Extra Visual Utilities */
+.x-small {
+    font-size: 0.68rem !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Horizontal Pipeline Stepper */
+.workflow-stepper-wrapper {
+    position: relative;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.workflow-progress-bar {
+    position: absolute;
+    top: 36px;
+    left: 4%;
+    right: 4%;
+    height: 4px;
+    background: #e9ecef;
+    z-index: 1;
+}
+
+.workflow-progress-line {
+    height: 100%;
+    background: var(--dark-color);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.workflow-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.workflow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 18%;
+}
+
+.workflow-step .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid #dee2e6;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 4px var(--white);
+}
+
+.workflow-step.completed .step-num {
+    background: #198754;
+    border-color: #198754;
+    color: var(--white);
+}
+
+.workflow-step.active .step-num {
+    background: var(--dark-color);
+    border-color: var(--dark-color);
+    color: var(--white);
+    box-shadow: 0 0 0 4px var(--white), 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.workflow-step .step-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #495057;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    transition: color 0.3s ease;
+}
+
+.workflow-step.active .step-label {
+    color: var(--dark-color);
+}
+
+.workflow-step .step-date {
+    font-size: 0.65rem;
+    color: #6c757d;
+}
+
+/* Figures Workspace Grid & Card hover */
+.figure-review-card {
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.figure-review-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.figure-thumbnail {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.figure-thumbnail:hover {
+    border-color: var(--dark-color) !important;
+}
+
+.figure-thumbnail svg {
+    transition: transform 0.4s ease;
+}
+
+.figure-thumbnail:hover svg {
+    transform: scale(1.05);
+}
+
+.active-project-card {
+    border: 2px solid var(--dark-color) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Multi-Step Upload Wizard milestones */
+.upload-milestones-wrapper {
+    position: relative;
+    padding: 10px 0;
+}
+
+.upload-milestone-bar {
+    position: absolute;
+    top: 24px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: #e9ecef;
+    z-index: 1;
+}
+
+.upload-milestone-progress {
+    height: 100%;
+    background: var(--dark-color);
+    transition: width 0.4s ease;
+}
+
+.upload-milestones {
+    position: relative;
+    z-index: 2;
+}
+
+.upload-milestone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 30%;
+}
+
+.upload-milestone .milestone-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid #dee2e6;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 3px var(--white);
+}
+
+.upload-milestone.active .milestone-dot {
+    background: var(--dark-color);
+    border-color: var(--dark-color);
+    color: var(--white);
+}
+
+.upload-milestone.completed .milestone-dot {
+    background: #198754;
+    border-color: #198754;
+    color: var(--white);
+}
+
+.upload-milestone .milestone-label {
+    font-size: 0.7rem;
+    margin-top: 8px;
+    color: #6c757d;
+}
+
+.upload-milestone.active .milestone-label {
+    color: var(--dark-color);
+}
+
+/* Payment Success Tick Animation */
+.success-tick-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #198754;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    animation: popTick 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes popTick {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Lightbox Drawing margins outline */
+.lightbox-margins-outline {
+    border: 2px solid #111;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.lightbox-drawing-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.lightbox-drawing-view svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Project selector cards */
+.project-nav-card .stat-card {
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.project-nav-card .stat-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Toast style notifications */
+.custom-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    background: var(--dark-color);
+    color: var(--white);
+    border-radius: 0;
+    padding: 15px 25px;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.custom-toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.custom-toast-success {
+    border-left: 5px solid #198754;
+}
+
+/* Dark Theme Overrides for Dashboard features */
+[data-theme="dark"] .workflow-progress-bar {
+    background: #2b2b2b;
+}
+
+[data-theme="dark"] .workflow-progress-line {
+    background: #ffffff;
+}
+
+[data-theme="dark"] .workflow-step .step-num {
+    background: #1a1a1a;
+    border-color: #3b3b3b;
+    color: #a0a0a0;
+    box-shadow: 0 0 0 4px #1a1a1a;
+}
+
+[data-theme="dark"] .workflow-step.completed .step-num {
+    background: #198754;
+    border-color: #198754;
+    color: var(--white);
+}
+
+[data-theme="dark"] .workflow-step.active .step-num {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 0 0 4px #1a1a1a, 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .workflow-step .step-label {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .workflow-step.active .step-label {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .figure-review-card {
+    background-color: #161616 !important;
+}
+
+[data-theme="dark"] .figure-review-card:hover {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .active-project-card {
+    border-color: #ffffff !important;
+}
+
+[data-theme="dark"] .figure-thumbnail {
+    background-color: #0f0f0f !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .figure-thumbnail svg * {
+    stroke: #ffffff;
+}
+
+[data-theme="dark"] .figure-thumbnail svg text {
+    fill: #000000 !important;
+}
+
+[data-theme="dark"] .figure-thumbnail svg circle {
+    fill: #ffffff !important;
+}
+
+[data-theme="dark"] .upload-milestone-bar {
+    background: #2b2b2b;
+}
+
+[data-theme="dark"] .upload-milestone-progress {
+    background: #ffffff;
+}
+
+[data-theme="dark"] .upload-milestone .milestone-dot {
+    background: #1a1a1a;
+    border-color: #3b3b3b;
+    color: #a0a0a0;
+    box-shadow: 0 0 0 3px #1a1a1a;
+}
+
+[data-theme="dark"] .upload-milestone.active .milestone-dot {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+}
+
+[data-theme="dark"] .upload-milestone.completed .milestone-dot {
+    background: #198754;
+    border-color: #198754;
+    color: var(--white);
+}
+
+[data-theme="dark"] .upload-milestone .milestone-label {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .upload-milestone.active .milestone-label {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .lightbox-margins-outline {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: #ffffff;
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+    background-color: #161616 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .modal-body {
+    background-color: #0f0f0f !important;
+}
+
+[data-theme="dark"] .modal-content {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .modal-title,
+[data-theme="dark"] .modal-body label,
+[data-theme="dark"] .modal-body strong {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .modal-body input,
+[data-theme="dark"] .modal-body select,
+[data-theme="dark"] .modal-body textarea {
+    background-color: #1a1a1a !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .modal-body input:focus,
+[data-theme="dark"] .modal-body select:focus,
+[data-theme="dark"] .modal-body textarea:focus {
+    border-color: #ffffff !important;
+}
+
+[data-theme="dark"] .sheet-margins-helper {
+    color: #6c757d !important;
+}
+
+/* Interactive Client Portal Session Switcher overrides */
+.user-info.dropdown-toggle::after {
+    display: none !important;
+}
+
+.session-switcher-header {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="dark"] .session-switcher-header {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.user-info {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.user-info:hover {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+    border-color: #000000 !important;
+}
+
+[data-theme="dark"] .user-info:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Safe Flex Truncation Utilities */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

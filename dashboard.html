@@ -49,14 +49,53 @@
                 </a>
             </div>
 
-            <div
-                class="user-info d-flex align-items-center gap-3 p-3 bg-light border border-dark border-opacity-10 mb-4">
-                <div class="avatar bg-dark text-white rounded-0 d-flex align-items-center justify-content-center fw-bold"
-                    style="width: 40px; height: 40px;">JD</div>
-                <div>
-                    <h6 class="mb-0 fw-bold small">John Doe</h6>
-                    <p class="mb-0 x-small text-muted">Lead Attorney</p>
+            <!-- Interactive Demo Session Switcher Label -->
+            <div class="session-switcher-header text-center bg-dark text-white p-1 rounded-0" style="font-size: 8px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;">
+                <i class="bi bi-people-fill me-1"></i> Client Portal Switcher
+            </div>
+            <div class="dropdown mb-4">
+                <div class="user-info d-flex align-items-center justify-content-between p-3 bg-light border border-dark border-opacity-10 dropdown-toggle cursor-pointer" 
+                    id="clientProfileSwitcher" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; min-width: 0;">
+                    <div class="d-flex align-items-center gap-3" style="min-width: 0; width: 100%;">
+                        <img src="assets/img/avatar-john-doe.png" alt="JD" class="avatar rounded-0 flex-shrink-0 border border-dark border-opacity-10"
+                            id="profile-avatar-img" style="width: 40px; height: 40px; object-fit: cover;">
+                        <div style="min-width: 0; flex-grow: 1;">
+                            <h6 class="mb-0 fw-bold small text-truncate" id="profile-display-name">John Doe</h6>
+                            <p class="mb-0 x-small text-muted text-truncate" id="profile-display-role" title="Lead Attorney @ Helix Patent Law">Lead Attorney @ Helix Patent Law</p>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-expand text-muted ms-2 flex-shrink-0"></i>
                 </div>
+                <ul class="dropdown-menu w-100 rounded-0 border-dark shadow-sm py-0" aria-labelledby="clientProfileSwitcher" style="font-size: 0.82rem;">
+                    <li><h6 class="dropdown-header text-uppercase tracking-wider small fw-bold text-dark px-3 py-2 bg-light border-bottom border-dark border-opacity-10 mb-1">Select Client Session</h6></li>
+                    <li><a class="dropdown-item py-2 px-3 client-switch-btn active" href="#" data-client="john-doe">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="assets/img/avatar-john-doe.png" alt="JD" class="avatar rounded-0 flex-shrink-0 border border-dark border-opacity-10" style="width: 28px; height: 28px; object-fit: cover;">
+                            <div>
+                                <strong class="d-block text-dark mb-0">John Doe</strong>
+                                <span class="x-small text-muted" style="font-size: 10px;">Lead Attorney @ Helix Law</span>
+                            </div>
+                        </div>
+                    </a></li>
+                    <li><a class="dropdown-item py-2 px-3 client-switch-btn" href="#" data-client="sarah-jenkins">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="assets/img/avatar-sarah-jenkins.png" alt="SJ" class="avatar rounded-0 flex-shrink-0 border border-dark border-opacity-10" style="width: 28px; height: 28px; object-fit: cover;">
+                            <div>
+                                <strong class="d-block text-dark mb-0">Sarah Jenkins</strong>
+                                <span class="x-small text-muted" style="font-size: 10px;">VP of R&D @ Tesla Motors</span>
+                            </div>
+                        </div>
+                    </a></li>
+                    <li><a class="dropdown-item py-2 px-3 client-switch-btn" href="#" data-client="david-wang">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="assets/img/avatar-david-wang.png" alt="DW" class="avatar rounded-0 flex-shrink-0 border border-dark border-opacity-10" style="width: 28px; height: 28px; object-fit: cover;">
+                            <div>
+                                <strong class="d-block text-dark mb-0">David Wang</strong>
+                                <span class="x-small text-muted" style="font-size: 10px;">Lead Inventor @ BioTech Labs</span>
+                            </div>
+                        </div>
+                    </a></li>
+                </ul>
             </div>
 
             <ul class="sidebar-nav">
@@ -133,7 +172,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Custom Request</a></li>
+                            <li><a class="dropdown-item" href="#" data-tab="upload">Custom Request</a></li>
                         </ul>
                     </div>
                 </div>
@@ -141,11 +180,63 @@
 
             <!-- Overview Tab -->
             <div id="overview" class="dashboard-tab">
+                <!-- Live Project Selector & Timeline -->
+                <div class="stat-card p-4 mb-4 border border-dark border-opacity-10 rounded-0">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                        <div>
+                            <span class="badge bg-warning text-dark rounded-0 px-2 py-1 text-uppercase fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>Action Required</span>
+                            <h5 class="fw-bold mb-1">Active Workflow: Turbine Blade Cooling</h5>
+                            <p class="text-secondary small mb-0">Project ID: <strong id="active-project-id">P-9921</strong> | Target Submission Date: <strong>May 28, 2026</strong></p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="small text-secondary fw-bold text-nowrap">Switch View:</span>
+                            <select class="form-select form-select-sm rounded-0 border-dark" id="timeline-project-selector" style="min-width: 220px;">
+                                <option value="P-9921">Turbine Blade Cooling (P-9921)</option>
+                                <option value="P-9922">Ergonomic Mouse Design (P-9922)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Horizontal Stepper -->
+                    <div class="workflow-stepper-wrapper mb-2">
+                        <div class="workflow-progress-bar">
+                            <div class="workflow-progress-line" id="workflow-progress-line" style="width: 50%;"></div>
+                        </div>
+                        <div class="workflow-steps">
+                            <div class="workflow-step completed" data-step="1">
+                                <div class="step-num"><i class="bi bi-check"></i></div>
+                                <div class="step-label">Sketch Uploaded</div>
+                                <div class="step-date small text-muted">May 12, 10:30 AM</div>
+                            </div>
+                            <div class="workflow-step completed" data-step="2">
+                                <div class="step-num"><i class="bi bi-check"></i></div>
+                                <div class="step-label">Drafting Phase</div>
+                                <div class="step-date small text-muted">May 15, 04:15 PM</div>
+                            </div>
+                            <div class="workflow-step active" data-step="3" id="timeline-step-3">
+                                <div class="step-num">3</div>
+                                <div class="step-label" id="timeline-step-label-3">Review & Revisions</div>
+                                <div class="step-date small text-muted" id="timeline-step-date-3">Active (24-48h window)</div>
+                            </div>
+                            <div class="workflow-step" data-step="4" id="timeline-step-4">
+                                <div class="step-num">4</div>
+                                <div class="step-label">Client Approved</div>
+                                <div class="step-date small text-muted">Awaiting final sign-off</div>
+                            </div>
+                            <div class="workflow-step" data-step="5" id="timeline-step-5">
+                                <div class="step-num">5</div>
+                                <div class="step-label">USPTO Filed</div>
+                                <div class="step-date small text-muted">Pending approval state</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row g-4 mb-5">
                     <div class="col-md-4">
                         <div class="stat-card">
                             <p class="text-muted small text-uppercase fw-bold tracking-widest mb-1">Active Projects</p>
-                            <h2 class="fw-bold mb-0">12</h2>
+                            <h2 class="fw-bold mb-0" id="stat-active-projects">12</h2>
                             <div class="mt-3 small text-success">
                                 <i class="bi bi-arrow-up-right me-1"></i> +2 this week
                             </div>
@@ -154,7 +245,7 @@
                     <div class="col-md-4">
                         <div class="stat-card">
                             <p class="text-muted small text-uppercase fw-bold tracking-widest mb-1">Awaiting USPTO</p>
-                            <h2 class="fw-bold mb-0">08</h2>
+                            <h2 class="fw-bold mb-0" id="stat-awaiting-uspto">08</h2>
                             <div class="mt-3 small text-muted">
                                 Tracking status in real-time
                             </div>
@@ -163,19 +254,19 @@
                     <div class="col-md-4">
                         <div class="stat-card">
                             <p class="text-muted small text-uppercase fw-bold tracking-widest mb-1">Pending Invoices</p>
-                            <h2 class="fw-bold mb-0">$1,240</h2>
-                            <div class="mt-3 small text-danger">
-                                <i class="bi bi-exclamation-circle me-1"></i> 1 overdue
+                            <h2 class="fw-bold mb-0" id="stat-pending-invoices">$840</h2>
+                            <div class="mt-3 small text-danger" id="stat-overdue-warning">
+                                <i class="bi bi-exclamation-circle me-1"></i> 1 invoice unpaid
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <h5 class="fw-bold mb-4">Recent Activity</h5>
-                <div class="row g-4">
+                <div class="row g-4" id="recent-activity-container">
                     <!-- Activity Card 1 -->
                     <div class="col-md-6 col-xl-4">
-                        <div class="stat-card p-0 overflow-hidden">
+                        <div class="stat-card p-0 overflow-hidden border border-dark border-opacity-10 rounded-0">
                             <div class="p-3 border-bottom border-dark border-opacity-10">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <span class="x-small text-muted text-uppercase fw-bold">Utility</span>
@@ -186,7 +277,7 @@
                             </div>
                             <div class="p-3 bg-light">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="x-small fw-bold text-uppercase tracking-widest">USPTO Status</span>
+                                    <span class="x-small fw-bold text-uppercase tracking-widest text-secondary">USPTO Status</span>
                                     <span class="text-success x-small fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Filed</span>
                                 </div>
                             </div>
@@ -194,7 +285,7 @@
                     </div>
                     <!-- Activity Card 2 -->
                     <div class="col-md-6 col-xl-4">
-                        <div class="stat-card p-0 overflow-hidden">
+                        <div class="stat-card p-0 overflow-hidden border border-dark border-opacity-10 rounded-0">
                             <div class="p-3 border-bottom border-dark border-opacity-10">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <span class="x-small text-muted text-uppercase fw-bold">Design</span>
@@ -205,7 +296,7 @@
                             </div>
                             <div class="p-3 bg-light">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="x-small fw-bold text-uppercase tracking-widest">USPTO Status</span>
+                                    <span class="x-small fw-bold text-uppercase tracking-widest text-secondary">USPTO Status</span>
                                     <span class="text-muted x-small fw-bold">Drafting</span>
                                 </div>
                             </div>
@@ -213,19 +304,19 @@
                     </div>
                     <!-- Activity Card 3 -->
                     <div class="col-md-6 col-xl-4">
-                        <div class="stat-card p-0 overflow-hidden">
+                        <div class="stat-card p-0 overflow-hidden border border-dark border-opacity-10 rounded-0">
                             <div class="p-3 border-bottom border-dark border-opacity-10">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <span class="x-small text-muted text-uppercase fw-bold">Utility</span>
-                                    <span class="status-badge status-pending">Awaiting Review</span>
+                                    <span class="status-badge status-pending" id="activity-badge-turbine">Awaiting Review</span>
                                 </div>
-                                <h6 class="fw-bold mb-1">Solar Array Logic</h6>
-                                <p class="x-small text-muted mb-0"><i class="bi bi-clock me-1"></i>May 5, 2026</p>
+                                <h6 class="fw-bold mb-1">Turbine Blade Cooling</h6>
+                                <p class="x-small text-muted mb-0"><i class="bi bi-clock me-1"></i>May 12, 2026</p>
                             </div>
                             <div class="p-3 bg-light">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="x-small fw-bold text-uppercase tracking-widest">USPTO Status</span>
-                                    <span class="text-muted x-small fw-bold">-</span>
+                                    <span class="x-small fw-bold text-uppercase tracking-widest text-secondary">USPTO Status</span>
+                                    <span class="text-muted x-small fw-bold" id="activity-uspto-turbine">Drafting</span>
                                 </div>
                             </div>
                         </div>
@@ -235,44 +326,269 @@
 
             <!-- My Projects Tab (Initially Hidden) -->
             <div id="projects" class="dashboard-tab d-none">
-                <div class="d-flex justify-content-between align-items-end mb-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
                     <div>
-                        <h5 class="fw-bold mb-1">Project Portfolio</h5>
-                        <p class="text-secondary small mb-0">Manage and track all your patent illustrations.</p>
+                        <h5 class="fw-bold mb-1">Project Portfolio Workspace</h5>
+                        <p class="text-secondary small mb-0">Select an active project below to open the live figures, review technical revisions, and sign off.</p>
                     </div>
-                    <div class="d-flex gap-2">
-                        <input type="text" class="form-control rounded-0 border-dark py-2"
-                            placeholder="Search projects...">
-                        <button class="btn btn-outline-dark rounded-0 px-3"><i class="bi bi-filter"></i></button>
+                    <div class="d-flex gap-2 align-self-start align-self-md-auto w-100 w-md-auto" style="max-width: 360px;">
+                        <input type="text" class="form-control rounded-0 border-dark py-2" id="project-search-input"
+                            placeholder="Search projects by ID, name...">
+                        <button class="btn btn-dark rounded-0 px-3" id="project-search-btn"><i class="bi bi-search"></i></button>
                     </div>
                 </div>
-                <div class="row g-4">
-                    <!-- Project Card 1 -->
-                    <div class="col-md-6 col-xl-4">
-                        <div class="stat-card p-0 overflow-hidden">
+
+                <!-- Projects Quick Selector Grid -->
+                <div class="row g-3 mb-5" id="projects-grid-list">
+                    <!-- Project 1 Card -->
+                    <div class="col-md-6 col-xl-4 project-nav-card" data-project-id="P-9921">
+                        <div class="stat-card p-0 overflow-hidden border border-dark border-opacity-10 rounded-0 cursor-pointer active-project-card" id="project-card-P-9921">
                             <div class="p-3 border-bottom border-dark border-opacity-10">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="x-small text-muted">ID: P-9921</span>
-                                    <span class="status-badge status-completed">Ready</span>
+                                    <span class="x-small text-muted fw-bold">ID: P-9921</span>
+                                    <span class="status-badge status-progress" id="project-badge-P-9921">Revisions Open</span>
                                 </div>
                                 <h6 class="fw-bold mb-1">Turbine Blade Cooling</h6>
-                                <p class="x-small text-secondary mb-0">Utility Patent | 8 Figures</p>
+                                <p class="x-small text-secondary mb-0">Utility Patent | 4 Active Figures</p>
                             </div>
-                            <div class="p-3 bg-light">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="x-small fw-bold">USPTO COMPLIANCE</span>
-                                    <span class="text-success x-small"><i class="bi bi-shield-check"></i>
-                                        Verified</span>
+                            <div class="p-3 bg-light d-flex justify-content-between align-items-center">
+                                <span class="x-small fw-bold"><i class="bi bi-clock me-1"></i>3-Day standard</span>
+                                <span class="text-dark x-small fw-bold">VIEW WORKSPACE <i class="bi bi-arrow-right ms-1"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project 2 Card -->
+                    <div class="col-md-6 col-xl-4 project-nav-card" data-project-id="P-9922">
+                        <div class="stat-card p-0 overflow-hidden border border-dark border-opacity-10 rounded-0 cursor-pointer" id="project-card-P-9922">
+                            <div class="p-3 border-bottom border-dark border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="x-small text-muted fw-bold">ID: P-9922</span>
+                                    <span class="status-badge status-completed" id="project-badge-P-9922">Client Approved</span>
                                 </div>
+                                <h6 class="fw-bold mb-1">Ergonomic Mouse Design</h6>
+                                <p class="x-small text-secondary mb-0">Design Patent | 3 Active Figures</p>
+                            </div>
+                            <div class="p-3 bg-light d-flex justify-content-between align-items-center">
+                                <span class="x-small fw-bold"><i class="bi bi-clock me-1"></i>24h Express</span>
+                                <span class="text-dark x-small fw-bold">VIEW WORKSPACE <i class="bi bi-arrow-right ms-1"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Figures Workspace -->
+                <div class="border border-dark border-opacity-10 p-4 bg-white mb-5 rounded-0 shadow-sm">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 border-bottom border-dark border-opacity-10 pb-3 mb-4">
+                        <div>
+                            <span class="x-small text-muted text-uppercase fw-bold tracking-widest d-block mb-1">Interactive Figures Workspace</span>
+                            <h4 class="fw-bold mb-1 text-dark" id="workspace-project-title">Turbine Blade Cooling (P-9921)</h4>
+                            <p class="text-secondary small mb-0"><i class="bi bi-shield-check text-dark me-1"></i>USPTO 37 CFR § 1.84 Compliance: Checked & Audited</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-dark rounded-0 fw-bold btn-sm" id="btn-request-full-revisions"><i class="bi bi-chat-left-text me-2"></i>Global Revisions</button>
+                            <button class="btn btn-dark rounded-0 fw-bold btn-sm" id="btn-approve-project-drawings"><i class="bi bi-check-lg me-2"></i>Approve All Figures</button>
+                        </div>
+                    </div>
+
+                    <!-- Figures Grid -->
+                    <div class="row g-4" id="figures-grid-container">
+                        <!-- Figure 1 -->
+                        <div class="col-md-6 col-xl-3" id="figure-card-1">
+                            <div class="figure-review-card border border-dark border-opacity-10 bg-light p-3 position-relative transition-all h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold text-dark small">Figure 1.1</span>
+                                    <span class="status-badge status-completed x-small px-2 py-0" id="figure-badge-1">Approved</span>
+                                </div>
+                                <div class="figure-thumbnail bg-white border border-dark border-opacity-10 p-3 text-center mb-3 cursor-pointer" onclick="openLightbox('figure-1.1')">
+                                    <!-- High fidelity SVG technical drawing -->
+                                    <svg viewBox="0 0 100 80" class="img-fluid" style="max-height: 140px;">
+                                        <rect x="5" y="5" width="90" height="70" fill="none" stroke="#111" stroke-width="0.5" stroke-dasharray="1,1"/>
+                                        <!-- Axis assembly drawing -->
+                                        <line x1="50" y1="10" x2="50" y2="70" stroke="#111" stroke-width="0.3" stroke-dasharray="3,2"/>
+                                        <ellipse cx="50" cy="40" rx="25" ry="12" fill="none" stroke="#111" stroke-width="0.8"/>
+                                        <ellipse cx="50" cy="40" rx="18" ry="8" fill="none" stroke="#111" stroke-width="0.5"/>
+                                        <ellipse cx="50" cy="40" rx="6" ry="3" fill="none" stroke="#111" stroke-width="0.8"/>
+                                        <line x1="25" y1="40" x2="75" y2="40" stroke="#111" stroke-width="0.3"/>
+                                        <!-- Bubbles -->
+                                        <circle cx="28" cy="20" r="3.5" fill="#fff" stroke="#111" stroke-width="0.5"/>
+                                        <text x="28" y="21.5" font-size="4" font-family="sans-serif" text-anchor="middle" font-weight="bold">10</text>
+                                        <line x1="28" y1="23.5" x2="40" y2="34" stroke="#111" stroke-width="0.4"/>
+                                        
+                                        <circle cx="72" cy="62" r="3.5" fill="#fff" stroke="#111" stroke-width="0.5"/>
+                                        <text x="72" y="63.5" font-size="4" font-family="sans-serif" text-anchor="middle" font-weight="bold">12</text>
+                                        <line x1="72" y1="58.5" x2="60" y2="44" stroke="#111" stroke-width="0.4"/>
+                                    </svg>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 small text-truncate">Isometric Housing View</h6>
+                                <p class="x-small text-secondary mb-3">Tangential Surface Shading | Lettering size 3.2mm</p>
                                 <div class="d-flex gap-2">
-                                    <button class="btn btn-dark btn-sm w-100 rounded-0 fw-bold">VIEW FILES</button>
-                                    <button class="btn btn-outline-dark btn-sm rounded-0"><i
-                                            class="bi bi-three-dots"></i></button>
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="openLightbox('figure-1.1')"><i class="bi bi-zoom-in me-1"></i>Zoom</button>
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="triggerFigureRevision(1)"><i class="bi bi-pencil-square me-1"></i>Revise</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Figure 2 -->
+                        <div class="col-md-6 col-xl-3" id="figure-card-2">
+                            <div class="figure-review-card border border-dark border-opacity-10 bg-light p-3 position-relative transition-all h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold text-dark small">Figure 1.2</span>
+                                    <span class="status-badge status-progress x-small px-2 py-0" id="figure-badge-2">Awaiting Approval</span>
+                                </div>
+                                <div class="figure-thumbnail bg-white border border-dark border-opacity-10 p-3 text-center mb-3 cursor-pointer" onclick="openLightbox('figure-1.2')">
+                                    <svg viewBox="0 0 100 80" class="img-fluid" style="max-height: 140px;">
+                                        <rect x="5" y="5" width="90" height="70" fill="none" stroke="#111" stroke-width="0.5" stroke-dasharray="1,1"/>
+                                        <!-- Hatching lines for cutaway cross-section -->
+                                        <path d="M 25,20 L 75,20 L 75,60 L 25,60 Z" fill="none" stroke="#111" stroke-width="0.8"/>
+                                        <path d="M 35,20 L 65,20 L 65,40 L 35,40 Z" fill="none" stroke="#111" stroke-width="0.6"/>
+                                        <!-- Section lines -->
+                                        <line x1="25" y1="20" x2="30" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <line x1="30" y1="20" x2="35" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <line x1="35" y1="20" x2="40" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <line x1="40" y1="20" x2="45" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <line x1="45" y1="20" x2="50" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <line x1="55" y1="20" x2="60" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <line x1="60" y1="20" x2="65" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <line x1="65" y1="20" x2="70" y2="15" stroke="#111" stroke-width="0.3"/>
+                                        <!-- Center axis -->
+                                        <line x1="50" y1="8" x2="50" y2="72" stroke="#111" stroke-width="0.4" stroke-dasharray="6,2,1,2"/>
+                                        <!-- Bubbles -->
+                                        <circle cx="16" cy="18" r="3.5" fill="#fff" stroke="#111" stroke-width="0.5"/>
+                                        <text x="16" y="19.5" font-size="4" font-family="sans-serif" text-anchor="middle" font-weight="bold">24</text>
+                                        <line x1="16" y1="21.5" x2="25" y2="35" stroke="#111" stroke-width="0.4"/>
+                                    </svg>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 small text-truncate">Cross-Sectional Cutaway</h6>
+                                <p class="x-small text-secondary mb-3">Section A-A Assembly | Correct Hatching Lines</p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="openLightbox('figure-1.2')"><i class="bi bi-zoom-in me-1"></i>Zoom</button>
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="triggerFigureRevision(2)"><i class="bi bi-pencil-square me-1"></i>Revise</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Figure 3 -->
+                        <div class="col-md-6 col-xl-3" id="figure-card-3">
+                            <div class="figure-review-card border border-dark border-opacity-10 bg-light p-3 position-relative transition-all h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold text-dark small">Figure 1.3</span>
+                                    <span class="status-badge status-pending x-small px-2 py-0" id="figure-badge-3">Pending Revision</span>
+                                </div>
+                                <div class="figure-thumbnail bg-white border border-dark border-opacity-10 p-3 text-center mb-3 cursor-pointer" onclick="openLightbox('figure-1.3')">
+                                    <svg viewBox="0 0 100 80" class="img-fluid" style="max-height: 140px;">
+                                        <rect x="5" y="5" width="90" height="70" fill="none" stroke="#111" stroke-width="0.5" stroke-dasharray="1,1"/>
+                                        <!-- Exploded view assembly lines -->
+                                        <rect x="15" y="30" width="12" height="20" fill="none" stroke="#111" stroke-width="0.7"/>
+                                        <line x1="27" y1="40" x2="43" y2="40" stroke="#111" stroke-width="0.4" stroke-dasharray="3,3"/>
+                                        <circle cx="48" cy="40" r="5" fill="none" stroke="#111" stroke-width="0.7"/>
+                                        <line x1="53" y1="40" x2="69" y2="40" stroke="#111" stroke-width="0.4" stroke-dasharray="3,3"/>
+                                        <polygon points="69,30 83,40 69,50" fill="none" stroke="#111" stroke-width="0.7"/>
+                                        <!-- Assembly axes -->
+                                        <line x1="10" y1="40" x2="90" y2="40" stroke="#111" stroke-width="0.2" stroke-dasharray="8,2"/>
+                                        <!-- Bubbles -->
+                                        <circle cx="48" cy="18" r="3.5" fill="#fff" stroke="#111" stroke-width="0.5"/>
+                                        <text x="48" y="19.5" font-size="4" font-family="sans-serif" text-anchor="middle" font-weight="bold">32</text>
+                                        <line x1="48" y1="21.5" x2="48" y2="35" stroke="#111" stroke-width="0.4"/>
+                                    </svg>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 small text-truncate">Exploded Assembly Flow</h6>
+                                <p class="x-small text-secondary mb-3">Operability Axes | Assembly Order 37 CFR § 1.84</p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="openLightbox('figure-1.3')"><i class="bi bi-zoom-in me-1"></i>Zoom</button>
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="triggerFigureRevision(3)"><i class="bi bi-pencil-square me-1"></i>Revise</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Figure 4 -->
+                        <div class="col-md-6 col-xl-3" id="figure-card-4">
+                            <div class="figure-review-card border border-dark border-opacity-10 bg-light p-3 position-relative transition-all h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold text-dark small">Figure 1.4</span>
+                                    <span class="status-badge status-progress x-small px-2 py-0" id="figure-badge-4">In Drafting</span>
+                                </div>
+                                <div class="figure-thumbnail bg-white border border-dark border-opacity-10 p-3 text-center mb-3 cursor-pointer" onclick="openLightbox('figure-1.4')">
+                                    <svg viewBox="0 0 100 80" class="img-fluid" style="max-height: 140px;">
+                                        <rect x="5" y="5" width="90" height="70" fill="none" stroke="#111" stroke-width="0.5" stroke-dasharray="1,1"/>
+                                        <!-- Mechanical rotor segments -->
+                                        <path d="M 50,15 C 30,15 20,30 20,50 L 80,50 C 80,30 70,15 50,15 Z" fill="none" stroke="#111" stroke-width="0.8"/>
+                                        <line x1="28" y1="50" x2="35" y2="35" stroke="#111" stroke-width="0.5"/>
+                                        <line x1="50" y1="50" x2="50" y2="30" stroke="#111" stroke-width="0.5"/>
+                                        <line x1="72" y1="50" x2="65" y2="35" stroke="#111" stroke-width="0.5"/>
+                                        <!-- Bubbles -->
+                                        <circle cx="85" cy="20" r="3.5" fill="#fff" stroke="#111" stroke-width="0.5"/>
+                                        <text x="85" y="21.5" font-size="4" font-family="sans-serif" text-anchor="middle" font-weight="bold">40</text>
+                                        <line x1="85" y1="23.5" x2="72" y2="36" stroke="#111" stroke-width="0.4"/>
+                                    </svg>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 small text-truncate">Detailed Blade Rotor</h6>
+                                <p class="x-small text-secondary mb-3">Enlarged Fragment Detail | Shading curves</p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="openLightbox('figure-1.4')"><i class="bi bi-zoom-in me-1"></i>Zoom</button>
+                                    <button class="btn btn-outline-dark btn-xs w-100 rounded-0 x-small py-1" onclick="triggerFigureRevision(4)"><i class="bi bi-pencil-square me-1"></i>Revise</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- More cards would go here -->
+
+                    <!-- Figure Approvals Timeline & Logs -->
+                    <div class="row g-4 mt-4">
+                        <div class="col-lg-7">
+                            <div class="bg-light p-4 border border-dark border-opacity-10 rounded-0 h-100">
+                                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-clock-history me-2"></i>Workspace Timeline Log</h6>
+                                <div class="workspace-log-list" id="workspace-log-timeline">
+                                    <div class="log-entry d-flex gap-3 mb-3 border-bottom border-dark border-opacity-5 pb-2">
+                                        <div class="log-icon text-success"><i class="bi bi-check-circle-fill"></i></div>
+                                        <div>
+                                            <p class="mb-0 text-dark small"><strong>Figure 1.1: Isometric Housing View</strong> approved by Client.</p>
+                                            <span class="x-small text-muted">May 16, 2026 - 11:22 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="log-entry d-flex gap-3 mb-3 border-bottom border-dark border-opacity-5 pb-2">
+                                        <div class="log-icon text-warning"><i class="bi bi-arrow-repeat"></i></div>
+                                        <div>
+                                            <p class="mb-0 text-dark small"><strong>Figure 1.3: Exploded Assembly Flow</strong> marked as <em>Pending Revision</em>. Adjusting placement alignment vectors along operational assembly axis 14.</p>
+                                            <span class="x-small text-muted">May 15, 2026 - 02:40 PM</span>
+                                        </div>
+                                    </div>
+                                    <div class="log-entry d-flex gap-3 pb-2">
+                                        <div class="log-icon text-dark"><i class="bi bi-pencil-fill"></i></div>
+                                        <div>
+                                            <p class="mb-0 text-dark small">Professional Drafting team uploaded initial drawing set drafts.</p>
+                                            <span class="x-small text-muted">May 15, 2026 - 10:15 AM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="bg-light p-4 border border-dark border-opacity-10 rounded-0 h-100">
+                                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-clipboard-check me-2"></i>37 CFR § 1.84 Compliance Checklist</h6>
+                                <div class="compliance-items small">
+                                    <div class="d-flex justify-content-between align-items-center mb-2 border-bottom border-dark border-opacity-5 pb-2">
+                                        <span class="text-secondary">Standard A4 / Letter Dimensions</span>
+                                        <span class="badge bg-success rounded-0 px-2 py-1"><i class="bi bi-shield-check me-1"></i>Compliant</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2 border-bottom border-dark border-opacity-5 pb-2">
+                                        <span class="text-secondary">Line Weight Standards (Outlines thick/thin)</span>
+                                        <span class="badge bg-success rounded-0 px-2 py-1"><i class="bi bi-shield-check me-1"></i>Compliant</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2 border-bottom border-dark border-opacity-5 pb-2">
+                                        <span class="text-secondary">Reference Lettering (Min height 3.2mm)</span>
+                                        <span class="badge bg-success rounded-0 px-2 py-1"><i class="bi bi-shield-check me-1"></i>Compliant</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2 border-bottom border-dark border-opacity-5 pb-2">
+                                        <span class="text-secondary">Tangential Perspective Shading</span>
+                                        <span class="badge bg-success rounded-0 px-2 py-1"><i class="bi bi-shield-check me-1"></i>Compliant</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-secondary">Correct assembly exploded axes</span>
+                                        <span class="badge bg-warning text-dark rounded-0 px-2 py-1"><i class="bi bi-exclamation-circle me-1"></i>Checking Revisions</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -280,47 +596,136 @@
             <div id="upload" class="dashboard-tab d-none">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
-                        <div class="bg-white p-5 border border-dark border-opacity-10 shadow-sm">
-                            <h5 class="fw-bold mb-1 text-center">Upload New Concept</h5>
-                            <p class="text-secondary small text-center mb-5">Upload your engineering sketches or photos
-                                for professional drafting.</p>
-
-                            <div class="upload-zone mb-4">
-                                <i class="bi bi-cloud-arrow-up display-4 text-dark mb-3"></i>
-                                <h6 class="fw-bold">Drag and drop files here</h6>
-                                <p class="text-muted small">Supported: PNG, JPG, PDF, DWG (Max 50MB)</p>
-                                <button class="btn btn-outline-dark btn-sm rounded-0 mt-3 px-4">BROWSE FILES</button>
+                        <div class="bg-white p-5 border border-dark border-opacity-10 shadow-sm rounded-0">
+                            <!-- Milestone indicators -->
+                            <div class="upload-milestones-wrapper mb-5">
+                                <div class="upload-milestone-bar">
+                                    <div class="upload-milestone-progress" id="wizard-progress-bar" style="width: 0%;"></div>
+                                </div>
+                                <div class="upload-milestones d-flex justify-content-between">
+                                    <div class="upload-milestone active" id="milestone-1" data-step="1">
+                                        <div class="milestone-dot">1</div>
+                                        <span class="milestone-label small fw-bold">Project Details</span>
+                                    </div>
+                                    <div class="upload-milestone" id="milestone-2" data-step="2">
+                                        <div class="milestone-dot">2</div>
+                                        <span class="milestone-label small fw-bold">Sketches & Upload</span>
+                                    </div>
+                                    <div class="upload-milestone" id="milestone-3" data-step="3">
+                                        <div class="milestone-dot">3</div>
+                                        <span class="milestone-label small fw-bold">Priorities & Terms</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <form>
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold small text-uppercase tracking-widest">Project
-                                        Name</label>
-                                    <input type="text" class="form-control rounded-0 border-dark py-3"
-                                        placeholder="e.g. Smart Connector Assembly">
-                                </div>
-                                <div class="row g-3 mb-4">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold small text-uppercase tracking-widest">Patent
-                                            Type</label>
-                                        <select class="form-select rounded-0 border-dark py-3">
-                                            <option>Utility Patent</option>
-                                            <option>Design Patent</option>
-                                            <option>Technical Art</option>
-                                        </select>
+                            <form id="project-upload-wizard" onsubmit="return false;">
+                                <!-- Wizard Step 1 -->
+                                <div class="wizard-pane active" id="wizard-step-1">
+                                    <h5 class="fw-bold mb-1 text-center">Step 1: Patent Scope & Metadata</h5>
+                                    <p class="text-secondary small text-center mb-4">Provide details regarding your utility, design, or specialized patent art requirements.</p>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Patent Project Title</label>
+                                        <input type="text" class="form-control rounded-0 border-dark py-3" id="wizard-input-title"
+                                            placeholder="e.g. Smart Turbine Intake Assembly" required>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label
-                                            class="form-label fw-bold small text-uppercase tracking-widest">Turnaround</label>
-                                        <select class="form-select rounded-0 border-dark py-3">
-                                            <option>Standard (48-72h)</option>
-                                            <option>Express (24h)</option>
-                                            <option>Rush (Next Day)</option>
-                                        </select>
+                                    
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Patent Category</label>
+                                            <select class="form-select rounded-0 border-dark py-3" id="wizard-input-type">
+                                                <option value="Utility">Utility Patent (Mechanical / Utility)</option>
+                                                <option value="Design">Design Patent (Visual Ornamentation)</option>
+                                                <option value="Conversion">Rough Conversion (CAD/Scans to Digital)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Estimated Figure Count</label>
+                                            <input type="number" class="form-control rounded-0 border-dark py-3" id="wizard-input-figures"
+                                                value="4" min="1" max="100" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end mt-4">
+                                        <button type="button" class="btn btn-dark rounded-0 px-5 py-3 fw-bold" onclick="transitionWizard(1, 2)">Next Step <i class="bi bi-arrow-right ms-2"></i></button>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-dark w-100 py-3 rounded-0 fw-bold">INITIATE
-                                    DRAFTING REQUEST</button>
+
+                                <!-- Wizard Step 2 -->
+                                <div class="wizard-pane d-none" id="wizard-step-2">
+                                    <h5 class="fw-bold mb-1 text-center">Step 2: Upload Rough Concept Materials</h5>
+                                    <p class="text-secondary small text-center mb-4">Drag sketches, CAD assets, design models, or photos into our secure technical repository.</p>
+                                    
+                                    <div class="upload-zone mb-4" id="wizard-dropzone" style="cursor: pointer;">
+                                        <i class="bi bi-cloud-arrow-up display-4 text-dark mb-3"></i>
+                                        <h6 class="fw-bold">Drag and drop raw engineering concepts here</h6>
+                                        <p class="text-muted small">Supports: PNG, JPG, PDF, STEP, DWG, DXF (Max 100MB)</p>
+                                        <button type="button" class="btn btn-outline-dark btn-sm rounded-0 mt-3 px-4" id="wizard-browse-trigger">BROWSE SECURE STORAGE</button>
+                                        <input type="file" class="d-none" id="wizard-real-file-input">
+                                    </div>
+
+                                    <!-- Upload Files Queue Grid -->
+                                    <div class="bg-light p-3 border border-dark border-opacity-10 rounded-0 mb-4 d-none" id="wizard-file-queue">
+                                        <h6 class="fw-bold text-dark mb-3 small"><i class="bi bi-file-earmark-arrow-up me-2"></i>Files Queue (Uploaded Successfully)</h6>
+                                        <div class="d-flex align-items-center justify-content-between p-2 bg-white border border-dark border-opacity-5 mb-2">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <i class="bi bi-file-pdf-fill text-danger h5 mb-0"></i>
+                                                <div>
+                                                    <span class="small text-dark fw-bold d-block" id="uploaded-filename">turbine_assembly_sketch_v1.pdf</span>
+                                                    <span class="x-small text-muted" id="uploaded-filesize">6.2 MB</span>
+                                                </div>
+                                            </div>
+                                            <span class="text-success small fw-bold"><i class="bi bi-check-circle-fill me-1"></i>100% Uploaded</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button type="button" class="btn btn-outline-dark rounded-0 px-4 py-3 fw-bold" onclick="transitionWizard(2, 1)"><i class="bi bi-arrow-left me-2"></i>Back</button>
+                                        <button type="button" class="btn btn-dark rounded-0 px-5 py-3 fw-bold" onclick="transitionWizard(2, 3)">Next Step <i class="bi bi-arrow-right ms-2"></i></button>
+                                    </div>
+                                </div>
+
+                                <!-- Wizard Step 3 -->
+                                <div class="wizard-pane d-none" id="wizard-step-3">
+                                    <h5 class="fw-bold mb-1 text-center">Step 3: Service Timelines & Legal Agreements</h5>
+                                    <p class="text-secondary small text-center mb-4">Set revision speeds, select technical drawing standards, and complete submission terms.</p>
+                                    
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Turnaround Option</label>
+                                            <select class="form-select rounded-0 border-dark py-3" id="wizard-input-priority">
+                                                <option value="Standard (3-Day Delivery)">Standard (3-Day Delivery) - $85/figure</option>
+                                                <option value="Express (24-48h Revisions)">Express (24-48h Revisions) - $115/figure</option>
+                                                <option value="Priority (Next-Day Fast)">Priority (Next-Day Rush) - $145/figure</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Target USPTO Filing Date</label>
+                                            <input type="date" class="form-control rounded-0 border-dark py-3" id="wizard-input-date" value="2026-05-28" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-light p-3 border border-dark border-opacity-10 mb-4 rounded-0">
+                                        <h6 class="fw-bold text-dark mb-3 small">CFR Standards & Compliance Attestations</h6>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input rounded-0 border-dark" type="checkbox" id="check-attest-1" checked required>
+                                            <label class="form-check-label small text-secondary" for="check-attest-1">
+                                                Verify adherence to <strong>37 CFR § 1.84 guidelines</strong> (margins, black lines, letter sizing).
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input rounded-0 border-dark" type="checkbox" id="check-attest-2" checked required>
+                                            <label class="form-check-label small text-secondary" for="check-attest-2">
+                                                Acknowledge that rough hand-sketches submitted are technically decipherable.
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button type="button" class="btn btn-outline-dark rounded-0 px-4 py-3 fw-bold" onclick="transitionWizard(3, 2)"><i class="bi bi-arrow-left me-2"></i>Back</button>
+                                        <button type="button" class="btn btn-dark rounded-0 px-5 py-3 fw-bold" id="btn-submit-wizard-project" onclick="submitWizardForm()">INITIATE DRAFTING REQUEST <i class="bi bi-cloud-arrow-up ms-2"></i></button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -329,25 +734,31 @@
 
             <!-- Invoices Tab (Initially Hidden) -->
             <div id="invoices" class="dashboard-tab d-none">
-                <h5 class="fw-bold mb-4">Billing & Invoices</h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1">Billing & Invoices</h5>
+                        <p class="text-secondary small mb-0">Track flat-rate figure pricing, checkout active balances, and view transaction history.</p>
+                    </div>
+                    <span class="badge bg-dark text-white rounded-0 px-3 py-2 text-uppercase fw-bold" style="font-size: 0.75rem;">Flat $85 / FIG Standard Tier</span>
+                </div>
                 <div class="row g-4">
                     <!-- Invoice Card 1 -->
                     <div class="col-md-6 col-lg-4">
-                        <div class="stat-card p-0 overflow-hidden">
+                        <div class="stat-card p-0 overflow-hidden border border-dark border-opacity-10 rounded-0">
                             <div class="p-3 border-bottom border-dark border-opacity-10">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <span class="x-small text-muted fw-bold">#INV-2026-001</span>
                                     <span class="status-badge status-completed">Paid</span>
                                 </div>
-                                <h6 class="fw-bold mb-1">Gear Assembly</h6>
-                                <p class="x-small text-muted mb-0">May 1, 2026</p>
+                                <h6 class="fw-bold mb-1">Gear Assembly Draft Set</h6>
+                                <p class="x-small text-muted mb-0">Issued: May 1, 2026</p>
                             </div>
                             <div class="p-3 bg-light d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="x-small text-muted d-block">Amount</span>
+                                    <span class="x-small text-muted d-block">Amount Paid</span>
                                     <span class="fw-bold">$400.00</span>
                                 </div>
-                                <button class="btn btn-outline-dark btn-sm rounded-0" title="Download Invoice">
+                                <button class="btn btn-outline-dark btn-sm rounded-0" title="Download Receipt">
                                     <i class="bi bi-download"></i>
                                 </button>
                             </div>
@@ -355,21 +766,21 @@
                     </div>
                     <!-- Invoice Card 2 -->
                     <div class="col-md-6 col-lg-4">
-                        <div class="stat-card p-0 overflow-hidden">
+                        <div class="stat-card p-0 overflow-hidden border border-dark border-opacity-10 rounded-0" id="invoice-card-unpaid">
                             <div class="p-3 border-bottom border-dark border-opacity-10">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <span class="x-small text-muted fw-bold">#INV-2026-004</span>
-                                    <span class="status-badge status-pending">Unpaid</span>
+                                    <span class="status-badge status-pending" id="invoice-badge-unpaid">Unpaid</span>
                                 </div>
-                                <h6 class="fw-bold mb-1">Mouse Design</h6>
-                                <p class="x-small text-muted mb-0">May 6, 2026</p>
+                                <h6 class="fw-bold mb-1">Ergonomic Mouse Design</h6>
+                                <p class="x-small text-muted mb-0">Issued: May 6, 2026</p>
                             </div>
                             <div class="p-3 bg-light d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="x-small text-muted d-block">Amount</span>
-                                    <span class="fw-bold">$840.00</span>
+                                    <span class="x-small text-muted d-block" id="invoice-label-amount">Amount Due</span>
+                                    <span class="fw-bold text-danger" id="invoice-text-amount">$840.00</span>
                                 </div>
-                                <button class="btn btn-dark btn-sm rounded-0 fw-bold px-3">PAY NOW</button>
+                                <button class="btn btn-dark btn-sm rounded-0 fw-bold px-3" id="btn-pay-now-invoice" onclick="openPaymentModal()"><i class="bi bi-credit-card me-1"></i>PAY NOW</button>
                             </div>
                         </div>
                     </div>
@@ -381,17 +792,17 @@
                 <h5 class="fw-bold mb-4">Support Center</h5>
                 <div class="row g-4">
                     <div class="col-md-6">
-                        <div class="stat-card">
-                            <i class="bi bi-envelope-at display-6 mb-3"></i>
-                            <h6 class="fw-bold">Email Support</h6>
+                        <div class="stat-card border border-dark border-opacity-10 rounded-0">
+                            <i class="bi bi-envelope-at display-6 mb-3 text-dark"></i>
+                            <h6 class="fw-bold">Email Support Desk</h6>
                             <p class="small text-muted">Typical response time: 2-4 hours</p>
                             <a href="mailto:support@patentdraft.com" class="btn btn-outline-dark btn-sm rounded-0">OPEN TICKET</a>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="stat-card">
-                            <i class="bi bi-telephone display-6 mb-3"></i>
-                            <h6 class="fw-bold">Priority Line</h6>
+                        <div class="stat-card border border-dark border-opacity-10 rounded-0">
+                            <i class="bi bi-telephone display-6 mb-3 text-dark"></i>
+                            <h6 class="fw-bold">Priority Illustration Line</h6>
                             <p class="small text-muted">Available for Pro and Enterprise plans</p>
                             <button class="btn btn-outline-dark btn-sm rounded-0">CALL NOW</button>
                         </div>
@@ -402,22 +813,176 @@
             <!-- Settings Tab (Initially Hidden) -->
             <div id="settings" class="dashboard-tab d-none">
                 <h5 class="fw-bold mb-4">Account Settings</h5>
-                <div class="bg-white p-4 border border-dark border-opacity-10 shadow-sm">
+                <div class="bg-white p-4 border border-dark border-opacity-10 shadow-sm rounded-0">
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small text-uppercase">Full Name</label>
+                            <label class="form-label fw-bold small text-uppercase text-dark">Full Name</label>
                             <input type="text" class="form-control rounded-0 border-dark" value="John Doe">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small text-uppercase">Email Address</label>
+                            <label class="form-label fw-bold small text-uppercase text-dark">Email Address</label>
                             <input type="email" class="form-control rounded-0 border-dark" value="john@doe.com">
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-dark rounded-0 px-4">SAVE CHANGES</button>
+                            <button class="btn btn-dark rounded-0 px-4 fw-bold">SAVE CHANGES</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+        </main>
+    </div>
+
+    <!-- Active High-Fidelity Figure Lightbox Modal -->
+    <div class="modal fade" id="lightboxModal" tabindex="-1" aria-labelledby="lightboxModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered rounded-0">
+            <div class="modal-content rounded-0 border border-dark">
+                <div class="modal-header border-bottom border-dark border-opacity-10 py-3 bg-white rounded-0">
+                    <div class="w-100 d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="x-small text-muted text-uppercase fw-bold tracking-widest d-block" id="lightbox-subtitle">FIGURE 1.1 WORKSPACE</span>
+                            <h5 class="modal-title fw-bold text-dark" id="lightboxModalLabel">Isometric Housing View</h5>
+                        </div>
+                        <button type="button" class="btn-close rounded-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body bg-light text-center p-4">
+                    <!-- Standard Sheet Template Outline -->
+                    <div class="lightbox-margins-outline bg-white border border-dark p-4 shadow-sm mx-auto position-relative" style="max-width: 540px;" id="lightbox-sheet-canvas">
+                        <div class="sheet-margins-helper text-muted text-start x-small position-absolute top-0 start-0 p-2 border-end border-bottom border-secondary border-opacity-25" style="font-size: 8px;">USPTO Margin Bounds (2.5cm Top/Left, 1.5cm Right, 1.0cm Bottom)</div>
+                        
+                        <!-- Dynamic SVG rendering area with zoom capability -->
+                        <div class="lightbox-drawing-view" id="lightbox-drawing-svg-holder" style="transform: scale(1.0); transition: transform 0.2s ease;">
+                            <!-- Will be injected dynamically -->
+                        </div>
+                    </div>
+                    
+                    <!-- Zoom Slider Controller -->
+                    <div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+                        <button class="btn btn-outline-dark btn-sm rounded-0" onclick="adjustLightboxZoom(-0.15)"><i class="bi bi-zoom-out"></i></button>
+                        <input type="range" class="form-range border-0 bg-transparent" id="lightbox-zoom-range" min="0.6" max="2.0" step="0.1" value="1.0" style="max-width: 200px;">
+                        <button class="btn btn-outline-dark btn-sm rounded-0" onclick="adjustLightboxZoom(0.15)"><i class="bi bi-zoom-in"></i></button>
+                        <span class="small fw-bold text-dark" id="lightbox-zoom-label">100%</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-dark border-opacity-10 py-3 bg-white rounded-0">
+                    <button type="button" class="btn btn-outline-dark rounded-0 fw-bold btn-sm" id="btn-lightbox-download"><i class="bi bi-download me-2"></i>Download compliant vector PDF</button>
+                    <button type="button" class="btn btn-dark rounded-0 fw-bold btn-sm" id="btn-lightbox-approve" data-bs-dismiss="modal"><i class="bi bi-check-circle me-2"></i>Approve Drawing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Revision Request Form Wizard Modal -->
+    <div class="modal fade" id="revisionModal" tabindex="-1" aria-labelledby="revisionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered rounded-0">
+            <div class="modal-content rounded-0 border border-dark">
+                <div class="modal-header border-bottom border-dark border-opacity-10 py-3 bg-white rounded-0">
+                    <h5 class="modal-title fw-bold text-dark" id="revisionModalLabel">Request Specific Figure Revision</h5>
+                    <button type="button" class="btn-close rounded-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light">
+                    <form id="figure-revision-form" onsubmit="return false;">
+                        <input type="hidden" id="revision-target-fig-id" value="1">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Target Component</label>
+                            <input type="text" class="form-control rounded-0 border-dark py-2 bg-white" id="revision-target-label" value="Figure 1.1 - Isometric Housing View" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Revision Priority</label>
+                            <select class="form-select rounded-0 border-dark py-2" id="revision-priority">
+                                <option value="Minor Visual Polish (Standard)">Minor Visual Polish (Standard 24-48h)</option>
+                                <option value="High Priority Adjustments (Express)">High Priority Adjustments (Express 24h)</option>
+                                <option value="Critical Compliance Correction (Rush)">Critical Compliance Correction (Rush 12h)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Required Adjustments (Specific details)</label>
+                            <textarea class="form-control rounded-0 border-dark py-2" id="revision-description" rows="4" 
+                                placeholder="Describe exactly what needs to be changed (e.g., 'Increase line thickness of component 12', 'Re-align operational assembly axis to point to rotor center')." required></textarea>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input rounded-0 border-dark" type="checkbox" id="revision-attest-margins" checked required>
+                            <label class="form-check-label small text-secondary" for="revision-attest-margins">
+                                Keep adjustments compliant with 37 CFR § 1.84 text/line specs.
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 py-3 rounded-0 fw-bold" onclick="submitFigureRevision()">SUBMIT REVISION REQUEST</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Secure Billing Checkout Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered rounded-0">
+            <div class="modal-content rounded-0 border border-dark">
+                <div class="modal-header border-bottom border-dark border-opacity-10 py-3 bg-white rounded-0">
+                    <h5 class="modal-title fw-bold text-dark" id="paymentModalLabel"><i class="bi bi-shield-lock-fill me-2 text-success"></i>Secure Portal Checkout</h5>
+                    <button type="button" class="btn-close rounded-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light">
+                    <!-- Billing Summary -->
+                    <div class="bg-white p-3 border border-dark border-opacity-10 rounded-0 mb-4 shadow-sm">
+                        <span class="x-small text-muted fw-bold text-uppercase d-block mb-2">Invoice Summary</span>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small text-secondary">Drafting & Vectorization Services</span>
+                            <span class="small text-dark fw-bold">$840.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-2 border-bottom border-dark border-opacity-5">
+                            <span class="small text-secondary">37 CFR § 1.84 Compliance Audit</span>
+                            <span class="small text-success fw-bold">FREE</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <strong class="text-dark">Total Amount Due</strong>
+                            <strong class="text-danger" id="payment-modal-amount">$840.00</strong>
+                        </div>
+                    </div>
+
+                    <form id="checkout-payment-form" onsubmit="return false;">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Cardholder Name</label>
+                            <input type="text" class="form-control rounded-0 border-dark py-2 bg-white" value="John Doe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Card Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text rounded-0 border-dark bg-white text-secondary"><i class="bi bi-credit-card"></i></span>
+                                <input type="text" class="form-control rounded-0 border-dark py-2 bg-white" value="•••• •••• •••• 4242" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">Expiration</label>
+                                <input type="text" class="form-control rounded-0 border-dark py-2 bg-white" value="12 / 29" placeholder="MM/YY" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold small text-uppercase tracking-widest text-dark">CVC</label>
+                                <input type="password" class="form-control rounded-0 border-dark py-2 bg-white" value="•••" placeholder="123" required>
+                            </div>
+                        </div>
+
+                        <!-- Success Animation Box (Hidden initially) -->
+                        <div class="text-center p-3 d-none mb-3" id="payment-success-tick">
+                            <div class="success-tick-circle mb-2 mx-auto">
+                                <i class="bi bi-check-lg text-white"></i>
+                            </div>
+                            <h6 class="fw-bold text-success mb-1">Payment Successfully Completed!</h6>
+                            <p class="x-small text-muted mb-0">A receipt has been dispatched to john@doe.com</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 py-3 rounded-0 fw-bold" id="btn-submit-secure-checkout" onclick="submitSecureCheckout()">SUBMIT SECURE PAYMENT ($840.00)</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
         </main>
     </div>
