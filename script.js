@@ -302,6 +302,17 @@ if (dashboardNavLinks.length > 0) {
                 }
             });
 
+            // Dynamic Synchronization of tab content on click
+            if (targetTabId === 'helpdesk' && typeof renderChatInterface === 'function') {
+                renderChatInterface();
+            } else if (targetTabId === 'admin-overview' && typeof renderAdminOverview === 'function') {
+                renderAdminOverview();
+            } else if (targetTabId === 'admin-projects' && typeof renderAdminProjectsDesk === 'function') {
+                renderAdminProjectsDesk();
+            } else if (targetTabId === 'admin-requests' && typeof renderAdminRequestsInbox === 'function') {
+                renderAdminRequestsInbox();
+            }
+
             // Close sidebar on mobile after clicking
             if (window.innerWidth < 992) {
                 closeSidebar();
@@ -886,7 +897,7 @@ function switchClient(clientId) {
     const avatarImgEl = document.getElementById('profile-avatar-img');
 
     if (displayName) displayName.textContent = client.name;
-    if (displayRole) displayRole.textContent = `${client.role} @ ${client.company}`;
+    if (displayRole) displayRole.innerHTML = `${client.role}<br><span style="font-size: 9px; opacity: 0.85;">@ ${client.company}</span>`;
     if (avatarImgEl) {
         avatarImgEl.src = client.avatarImg || '';
         avatarImgEl.alt = client.initials;
@@ -2097,3 +2108,693 @@ function fireConfettiParticles() {
         }, 2600);
     }
 }
+
+// -------------------------------------------------------------
+// STAGE 3: ROLE SEPARATION & ADMIN PORTAL ENGINE
+// -------------------------------------------------------------
+
+// Active Demo States
+let currentWorkspaceMode = 'client'; // 'client' or 'admin'
+let activeChatClientId = 'john-doe'; // default selected chat in admin
+let adminSelectedClientId = 'john-doe'; // default selected client at Admin Drafting Desk
+
+// Chat History Database
+const chatHistory = {
+    'john-doe': [
+        { sender: 'illustrator', text: 'Hi John, I\'ve finalized Figure 1.1 and 1.2 according to 37 CFR guidelines. Can you confirm the lettering sizes look correct?', time: 'May 16 - 10:30 AM' },
+        { sender: 'client', text: 'Yes, Alex. Helix Law confirmed the standard 3.2mm font size is perfect for filing. Let\'s check Figure 1.3.', time: 'May 16 - 11:15 AM' },
+        { sender: 'illustrator', text: 'Noted. For Figure 1.3, I noticed some overlaps on the assembly arrows. I\'ll adjust the offset vectors.', time: 'May 16 - 11:45 AM' }
+    ],
+    'sarah-jenkins': [
+        { sender: 'client', text: 'Alex, we need these thermal sleeve drawings to have absolute dark line thickness consistency. High priority!', time: 'May 17 - 02:15 PM' },
+        { sender: 'illustrator', text: 'Hi Sarah. Understood. I\'ve set the line weights to exactly 0.8mm for main contours and 0.4mm for shading lines. Safe for USPTO scanning.', time: 'May 17 - 03:00 PM' }
+    ],
+    'david-wang': [
+        { sender: 'illustrator', text: 'Hi David, I\'ve received the valve specifications. Beginning rendering on the microchannels today.', time: 'May 17 - 09:00 AM' },
+        { sender: 'client', text: 'Great. Let me know when the first utility draft is ready in the sandbox.', time: 'May 17 - 09:45 AM' }
+    ]
+};
+
+// Mock Incoming Requests
+let incomingRequests = [
+    { id: 'REQ-101', client: 'sarah-jenkins', clientName: 'Sarah Jenkins', company: 'Tesla Motors', title: 'Solid State Anode Matrix', figures: 5, priority: 'Express (24h)', date: 'May 18, 2026', sketchFile: 'anode_matrix_lines.pdf' },
+    { id: 'REQ-102', client: 'david-wang', clientName: 'David Wang', company: 'BioTech Labs', title: 'Centrifugal Flow Separator', figures: 3, priority: 'Standard', date: 'May 18, 2026', sketchFile: 'separator_design_v2.png' },
+    { id: 'REQ-103', client: 'john-doe', clientName: 'John Doe', company: 'Helix Patent Law', title: 'Orthogonal Rotary Gearbox', figures: 4, priority: 'Standard', date: 'May 18, 2026', sketchFile: 'gearbox_handsketch.pdf' }
+];
+
+// Initialize and Bind Workspace Switching
+document.addEventListener('DOMContentLoaded', () => {
+    const clientRadio = document.getElementById('modeClient');
+    const adminRadio = document.getElementById('modeAdmin');
+
+    if (clientRadio && adminRadio) {
+        clientRadio.addEventListener('change', () => {
+            if (clientRadio.checked) setWorkspaceMode('client');
+        });
+        adminRadio.addEventListener('change', () => {
+            if (adminRadio.checked) setWorkspaceMode('admin');
+        });
+    }
+
+    // Connect chat thread input attachments
+    const chatInputForm = document.getElementById('chat-input-form');
+    if (chatInputForm) {
+        chatInputForm.removeAttribute('onsubmit'); // Remove inline submit to avoid double execution
+        chatInputForm.addEventListener('submit', handleChatSubmit);
+    }
+});
+
+// Set Workspace Portal Mode
+function setWorkspaceMode(mode) {
+    currentWorkspaceMode = mode;
+    
+    const clientWrapper = document.getElementById('client-switcher-wrapper');
+    const adminWrapper = document.getElementById('admin-profile-wrapper');
+    const clientNavs = document.querySelectorAll('.client-nav-item');
+    const adminNavs = document.querySelectorAll('.admin-nav-item');
+    const headerBadge = document.getElementById('demo-mode-badge');
+    const badgeText = document.getElementById('demo-mode-text');
+    const badgePulse = document.getElementById('demo-mode-pulse');
+    const colHeader = document.getElementById('collaboration-nav-header');
+
+    if (mode === 'client') {
+        // Toggle Sidebar Profiles
+        if (clientWrapper) clientWrapper.classList.remove('d-none');
+        if (adminWrapper) adminWrapper.classList.add('d-none');
+
+        // Toggle Sidebar Navs
+        clientNavs.forEach(el => el.classList.remove('d-none'));
+        adminNavs.forEach(el => el.classList.add('d-none'));
+
+        // Reset badge styles to green client mode
+        if (headerBadge) {
+            headerBadge.className = 'badge bg-dark border border-dark rounded-pill px-3 py-2 fw-bold text-white d-flex align-items-center gap-2';
+        }
+        if (badgeText) badgeText.textContent = 'CLIENT PORTAL';
+        if (badgePulse) {
+            badgePulse.className = 'pulse-dot';
+        }
+        if (colHeader) colHeader.textContent = 'Support';
+
+        // Re-sync client state
+        let currentClient = 'john-doe';
+        const activeBtn = document.querySelector('.client-switch-btn.active');
+        if (activeBtn) {
+            currentClient = activeBtn.getAttribute('data-client');
+        }
+        
+        // Go back to Client Overview
+        const overviewNavLink = document.querySelector('.sidebar-nav-link[data-tab="overview"]');
+        if (overviewNavLink) overviewNavLink.click();
+
+        switchClient(currentClient);
+        showSuccessToast('<i class="bi bi-person-circle text-success h5 mb-0"></i> Switched back to Client Collaboration Portal!');
+    } else {
+        // Toggle Sidebar Profiles
+        if (clientWrapper) clientWrapper.classList.add('d-none');
+        if (adminWrapper) adminWrapper.classList.remove('d-none');
+
+        // Toggle Sidebar Navs
+        clientNavs.forEach(el => el.classList.add('d-none'));
+        adminNavs.forEach(el => el.classList.remove('d-none'));
+
+        // Change badge styles to purple admin mode
+        if (headerBadge) {
+            headerBadge.className = 'badge bg-dark border border-dark rounded-pill px-3 py-2 fw-bold text-white d-flex align-items-center gap-2';
+        }
+        if (badgeText) badgeText.textContent = 'ADMIN PORTAL';
+        if (badgePulse) {
+            badgePulse.className = 'pulse-dot admin';
+        }
+        if (colHeader) colHeader.textContent = 'Collaboration Hub';
+
+        // Switch automatically to Admin Overview Tab
+        const adminOverviewLink = document.querySelector('.sidebar-nav-link[data-tab="admin-overview"]');
+        if (adminOverviewLink) adminOverviewLink.click();
+
+        // Render admin structures
+        renderAdminOverview();
+        renderAdminProjectsDesk();
+        renderAdminRequestsInbox();
+        renderChatInterface();
+
+        showSuccessToast('<i class="bi bi-shield-check text-primary h5 mb-0"></i> Welcome to the Freelance Patent Illustrator Admin Desk!');
+    }
+}
+
+// -------------------------------------------------------------
+// ADMIN VIEW RENDERERS
+// -------------------------------------------------------------
+
+// Render Admin Dashboard Overview Details
+function renderAdminOverview() {
+    const activeCount = document.getElementById('admin-stat-active-count');
+    const revisionsCount = document.getElementById('admin-stat-revisions-count');
+    const requestsBadge = document.getElementById('admin-incoming-badge');
+
+    let totalActiveProjects = 0;
+    let totalPendingRevisions = 0;
+
+    Object.keys(clientMockData).forEach(clientId => {
+        const client = clientMockData[clientId];
+        client.projects.forEach(p => {
+            totalActiveProjects++;
+            // Check figures inside this client's project
+            const figs = client.figures[p.id] || [];
+            figs.forEach(fig => {
+                if (fig.status === 'Pending Revision') totalPendingRevisions++;
+            });
+        });
+    });
+
+    if (activeCount) activeCount.textContent = totalActiveProjects;
+    if (revisionsCount) revisionsCount.textContent = totalPendingRevisions;
+    if (requestsBadge) requestsBadge.textContent = incomingRequests.length;
+
+    // Populate Workload Queue
+    const workQueueBody = document.getElementById('admin-dashboard-work-queue');
+    if (workQueueBody) {
+        workQueueBody.innerHTML = '';
+        Object.keys(clientMockData).forEach(clientId => {
+            const client = clientMockData[clientId];
+            client.projects.forEach(p => {
+                const statusBadgeHTML = `<span class="status-badge ${p.badgeClass}">${p.badgeText}</span>`;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${client.avatarImg}" alt="${client.initials}" class="avatar rounded-0 border border-dark border-opacity-10" style="width:24px; height:24px; object-fit:cover;">
+                            <div>
+                                <strong class="d-block x-small text-dark mb-0">${client.name}</strong>
+                                <span class="x-small text-muted" style="font-size: 9px;">${client.company}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <strong class="d-block small text-dark">${p.title}</strong>
+                        <span class="x-small text-muted">ID: ${p.id} | ${p.type} Patent</span>
+                    </td>
+                    <td>${statusBadgeHTML}</td>
+                    <td><span class="badge bg-secondary rounded-0 px-2 py-1 x-small fw-bold text-dark">${p.figuresCount} Figures</span></td>
+                    <td><span class="x-small fw-bold text-dark">${p.targetDate}</span></td>
+                `;
+                workQueueBody.appendChild(row);
+            });
+        });
+    }
+
+    // Render Audit logs
+    const auditLogsUl = document.getElementById('admin-recent-logs');
+    if (auditLogsUl) {
+        auditLogsUl.innerHTML = '';
+        const logs = [
+            { text: '<strong>Sarah Jenkins</strong> paid Invoice #INV-2026-003.', time: '2 hours ago' },
+            { text: '<strong>John Doe</strong> submitted technical revisions for Fig 1.3.', time: '4 hours ago' },
+            { text: 'New drafting request received from <strong>David Wang</strong>.', time: 'Yesterday' },
+            { text: 'Published updated Vector set for Battery Sleeve P-8841.', time: '2 days ago' }
+        ];
+
+        logs.forEach(log => {
+            const li = document.createElement('li');
+            li.className = 'mb-2 pb-2 border-bottom border-dark border-opacity-5';
+            li.innerHTML = `
+                <div>${log.text}</div>
+                <span class="x-small text-muted"><i class="bi bi-clock me-1"></i>${log.time}</span>
+            `;
+            auditLogsUl.appendChild(li);
+        });
+    }
+}
+
+// Render Admin Drafting Workspace
+function renderAdminProjectsDesk() {
+    // Populate Client list
+    const clientListGroup = document.getElementById('admin-desk-client-list');
+    if (clientListGroup) {
+        clientListGroup.innerHTML = '';
+        Object.keys(clientMockData).forEach(clientId => {
+            const client = clientMockData[clientId];
+            const isActive = clientId === adminSelectedClientId;
+            const item = document.createElement('a');
+            item.href = '#';
+            item.className = `list-group-item list-group-item-action rounded-0 border-dark border-opacity-10 py-2 px-3 ${isActive ? 'bg-admin-card border-left border-purple fw-bold' : ''}`;
+            item.style.fontSize = '0.8rem';
+            item.innerHTML = `
+                <div class="d-flex align-items-center gap-2">
+                    <img src="${client.avatarImg}" alt="${client.initials}" class="avatar rounded-0 border" style="width:24px; height:24px; object-fit:cover;">
+                    <div class="text-truncate">
+                        <strong class="d-block text-dark text-truncate">${client.name}</strong>
+                        <span class="x-small text-muted d-block text-truncate" style="font-size:9px;">${client.company}</span>
+                    </div>
+                </div>
+            `;
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                adminSelectedClientId = clientId;
+                renderAdminProjectsDesk();
+            });
+            clientListGroup.appendChild(item);
+        });
+    }
+
+    // Render Active Project Figures (Illustrator Mode)
+    const client = clientMockData[adminSelectedClientId];
+    if (!client) return;
+
+    const project = client.projects[0]; // Active main project
+    
+    const titleEl = document.getElementById('admin-desk-project-title');
+    const metaEl = document.getElementById('admin-desk-project-meta');
+    const badgeEl = document.getElementById('admin-desk-project-badge');
+
+    if (titleEl) titleEl.textContent = `Project: ${project.title}`;
+    if (metaEl) metaEl.textContent = `Client: ${client.name} (${client.company}) | ID: ${project.id} | Turnaround: ${project.turnaround}`;
+    if (badgeEl) {
+        badgeEl.className = `status-badge ${project.badgeClass}`;
+        badgeEl.textContent = project.badgeText;
+    }
+
+    const grid = document.getElementById('admin-desk-figures-grid');
+    if (grid) {
+        grid.innerHTML = '';
+        const projectFigs = client.figures[project.id] || [];
+
+        projectFigs.forEach(fig => {
+            const isPendingRevision = fig.status === 'Pending Revision';
+            const isInDrafting = fig.status === 'In Drafting';
+
+            const card = document.createElement('div');
+            card.className = 'col-md-6 col-xl-4';
+            card.innerHTML = `
+                <div class="stat-card p-0 border border-dark border-opacity-10 rounded-0 h-100 flex-column d-flex">
+                    <div class="p-3 border-bottom border-dark border-opacity-10 d-flex justify-content-between align-items-center">
+                        <strong class="text-dark small">${fig.label}</strong>
+                        <span class="status-badge ${fig.status === 'Approved' ? 'status-completed' : fig.status === 'Pending Revision' ? 'status-pending' : 'status-progress'}" style="font-size:9px; padding:2px 6px;">${fig.status}</span>
+                    </div>
+                    <!-- Vector Drawing Area -->
+                    <div class="bg-white border-bottom border-dark border-opacity-10 p-3 text-center d-flex align-items-center justify-content-center" style="height: 180px;">
+                        <svg class="w-100 h-100" viewBox="0 0 100 80">
+                            ${fig.svgContent}
+                        </svg>
+                    </div>
+                    <div class="p-3 flex-grow-1 d-flex flex-column justify-content-between">
+                        <div>
+                            <h6 class="fw-bold mb-1 small">${fig.title}</h6>
+                            <p class="x-small text-muted mb-2">${fig.shading}</p>
+                            ${isPendingRevision 
+                                ? `<div class="p-2 bg-warning bg-opacity-10 border border-warning border-opacity-20 mb-3 small text-dark" style="font-size:10px; line-height:1.3;">
+                                    <strong><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>Client Revision Note:</strong> Adjust arrows along operability lines.
+                                   </div>`
+                                : ''
+                            }
+                        </div>
+                        <div class="d-flex gap-2">
+                            ${isInDrafting || isPendingRevision
+                                ? `<button class="btn btn-dark btn-xs rounded-0 fw-bold w-100 py-2 text-uppercase" onclick="resolveAdminRevision('${client.projects[0].id}', ${fig.id})">
+                                    <i class="bi bi-check-lg me-1"></i>Publish Vector V2
+                                   </button>`
+                                : `<button class="btn btn-outline-dark btn-xs rounded-0 w-100 py-2" disabled>
+                                    <i class="bi bi-shield-check me-1"></i>Approved & Filed
+                                   </button>`
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+}
+
+// Admin Action: Resolve a revision or publish V2 drawing directly
+function resolveAdminRevision(projectId, figureId) {
+    const client = clientMockData[adminSelectedClientId];
+    if (!client) return;
+
+    const projectFigs = client.figures[projectId] || [];
+    const figure = projectFigs.find(f => f.id === figureId);
+
+    if (figure) {
+        figure.status = 'Awaiting Approval';
+        figure.shading = 'Vector Layers Updated | Tangential Shading Verified [Alex Mercer]';
+        
+        // Add log
+        client.activityLog[projectId].unshift({
+            type: 'draft',
+            message: `<strong>${figure.label} Vector Version 2 Uploaded</strong>: technical shading marks adjusted, alignment vectors closed.`,
+            date: getFormattedTimestamp()
+        });
+
+        // Set timeline status
+        const proj = client.projects.find(p => p.id === projectId);
+        if (proj) {
+            proj.badgeText = 'Awaiting Approval';
+            proj.badgeClass = 'status-progress';
+            proj.timelineStep = 4;
+        }
+
+        // Re-render dashboard
+        renderAdminOverview();
+        renderAdminProjectsDesk();
+        renderChatInterface();
+
+        showSuccessToast(`<i class="bi bi-cloud-arrow-up-fill text-success h5 mb-0"></i> Published Vector lines for ${figure.label}! State updated.`);
+        fireConfettiParticles();
+    }
+}
+
+// Render Admin Upload Requests Inbox
+function renderAdminRequestsInbox() {
+    const grid = document.getElementById('admin-incoming-requests-grid');
+    if (!grid) return;
+
+    if (incomingRequests.length === 0) {
+        grid.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-inbox display-4 text-muted d-block mb-3"></i>
+                <h6 class="fw-bold text-secondary">Upload Requests Inbox Empty</h6>
+                <p class="x-small text-muted">All incoming drafts and PGP sketches have been registered successfully.</p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = '';
+    incomingRequests.forEach((req, idx) => {
+        const card = document.createElement('div');
+        card.className = 'col-md-6 col-lg-4';
+        card.innerHTML = `
+            <div class="stat-card p-0 border border-dark border-opacity-10 rounded-0 h-100 d-flex flex-column justify-content-between">
+                <div class="p-3 border-bottom border-dark border-opacity-10">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge badge-admin-purple rounded-0 px-2 py-1 x-small fw-bold">${req.id}</span>
+                        <span class="badge bg-warning rounded-0 px-2 py-1 text-dark x-small fw-bold">${req.priority}</span>
+                    </div>
+                    <h6 class="fw-bold mb-1 text-dark">${req.title}</h6>
+                    <p class="x-small text-muted mb-0">Submitted by: <strong>${req.clientName}</strong> (${req.company})</p>
+                </div>
+                <div class="p-3 bg-light border-bottom border-dark border-opacity-5">
+                    <span class="x-small text-muted d-block mb-1">Attached Rough Concept Sheet</span>
+                    <div class="d-flex align-items-center gap-2 border border-dark border-opacity-10 p-2 bg-white cursor-pointer" style="font-size:0.75rem;">
+                        <i class="bi bi-file-earmark-pdf text-danger h5 mb-0"></i>
+                        <div class="text-truncate">
+                            <span class="fw-bold text-dark text-truncate d-block">${req.sketchFile}</span>
+                            <span class="x-small text-muted">Scope: ${req.figures} vector figures</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 d-flex gap-2">
+                    <button class="btn btn-outline-dark btn-xs rounded-0 fw-bold w-50 py-2" onclick="dismissIncomingRequest(${idx})">DECLINE</button>
+                    <button class="btn btn-dark btn-xs rounded-0 fw-bold w-50 py-2 text-uppercase" onclick="acceptIncomingRequest(${idx})">Accept & Start</button>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// Admin Request Interactions Dismiss/Accept
+function dismissIncomingRequest(index) {
+    if (confirm('Decline this patent drafting request from attorney?')) {
+        incomingRequests.splice(index, 1);
+        renderAdminOverview();
+        renderAdminRequestsInbox();
+        showSuccessToast('<i class="bi bi-trash text-danger h5 mb-0"></i> Request dismissed successfully.');
+    }
+}
+
+function acceptIncomingRequest(index) {
+    const req = incomingRequests[index];
+    if (!req) return;
+
+    const targetClient = clientMockData[req.client];
+    if (targetClient) {
+        const newProjId = 'P-' + Math.floor(1000 + Math.random() * 9000);
+        
+        const projectObj = {
+            id: newProjId,
+            title: req.title,
+            type: 'Utility',
+            figuresCount: req.figures,
+            timelineStep: 2, 
+            turnaround: req.priority,
+            targetDate: 'June 20, 2026',
+            usptoStatus: 'Drafting',
+            badgeClass: 'status-progress',
+            badgeText: 'Drafting Phase'
+        };
+
+        const figs = [];
+        for (let i = 1; i <= req.figures; i++) {
+            figs.push({
+                id: i,
+                label: `Figure ${i}.1`,
+                title: `Isometric View Component ${i}`,
+                shading: 'Outlines verification pending',
+                status: 'In Drafting',
+                svgContent: `<rect x="5" y="5" width="90" height="70" fill="none" stroke="#111" stroke-width="0.5" stroke-dasharray="1,1"/>
+                             <circle cx="50" cy="40" r="12" fill="none" stroke="#111" stroke-width="0.8"/>`
+            });
+        }
+
+        targetClient.projects.unshift(projectObj);
+        targetClient.figures[newProjId] = figs;
+        targetClient.activityLog[newProjId] = [
+            { type: 'draft', message: `Illustration Drafting process initiated. Scope set for ${req.figures} vector drawings.`, date: getFormattedTimestamp() }
+        ];
+
+        const invId = 'INV-2026-' + Math.floor(100 + Math.random() * 900);
+        targetClient.invoices[invId] = {
+            amount: req.figures * 85, 
+            status: 'Unpaid',
+            project: req.title,
+            date: req.date
+        };
+
+        incomingRequests.splice(index, 1);
+
+        renderAdminOverview();
+        renderAdminProjectsDesk();
+        renderAdminRequestsInbox();
+        renderChatInterface();
+
+        showSuccessToast(`<i class="bi bi-folder-check text-success h5 mb-0"></i> Registered Project ${newProjId} for ${req.clientName}!`);
+        fireConfettiParticles();
+    }
+}
+
+// -------------------------------------------------------------
+// SECURE COLLABORATIVE CHAT SYSTEM
+// -------------------------------------------------------------
+
+// Render chat sidebar threads list & message window bubbles
+function renderChatInterface() {
+    const list = document.getElementById('chat-threads-list');
+    const container = document.getElementById('chat-messages-container');
+    const titleEl = document.getElementById('chat-tab-title');
+    const descEl = document.getElementById('chat-tab-desc');
+    const sidebarHeader = document.getElementById('chat-sidebar-header');
+
+    if (!list || !container) return;
+
+    if (currentWorkspaceMode === 'client') {
+        if (titleEl) titleEl.innerHTML = '<i class="bi bi-chat-dots-fill me-2"></i>Secure Drafting Support Desk';
+        if (descEl) descEl.textContent = 'Active encrypted support line with Senior Patent Illustrator Alex Mercer.';
+        if (sidebarHeader) sidebarHeader.textContent = 'Active Support';
+
+        list.innerHTML = `
+            <div class="chat-channel-item active d-flex align-items-center gap-2">
+                <div class="avatar rounded-0 flex-shrink-0 bg-dark text-white d-flex align-items-center justify-content-center fw-bold" style="width:36px; height:36px;">
+                    AM
+                </div>
+                <div class="text-truncate">
+                    <strong class="d-block text-dark small text-truncate">Alex Mercer</strong>
+                    <span class="x-small text-muted text-truncate d-block" style="font-size:9px;">Drafting Desk Room</span>
+                </div>
+            </div>
+        `;
+
+        let currentClient = 'john-doe';
+        const activeBtn = document.querySelector('.client-switch-btn.active');
+        if (activeBtn) {
+            currentClient = activeBtn.getAttribute('data-client');
+        }
+
+        const activeAvatar = document.getElementById('chat-active-avatar');
+        const activeTitle = document.getElementById('chat-active-title');
+        const activePulse = document.getElementById('chat-active-pulse');
+
+        if (activeAvatar) activeAvatar.innerHTML = 'AM';
+        if (activeTitle) activeTitle.textContent = 'Alex Mercer (Illustrator)';
+        if (activePulse) activePulse.className = 'pulse-dot text-success';
+
+        renderChatBubbles(currentClient);
+
+    } else {
+        if (titleEl) titleEl.innerHTML = '<i class="bi bi-shield-fill-check me-2"></i>Illustrator Customer Desk';
+        if (descEl) descEl.textContent = 'Manage technical revision chats and attachment logs with active attorneys and inventors.';
+        if (sidebarHeader) sidebarHeader.textContent = 'Customer Threads';
+
+        list.innerHTML = '';
+        Object.keys(clientMockData).forEach(clientId => {
+            const client = clientMockData[clientId];
+            const isActive = clientId === activeChatClientId;
+            const item = document.createElement('div');
+            item.className = `chat-channel-item d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`;
+            item.innerHTML = `
+                <img src="${client.avatarImg}" alt="${client.initials}" class="avatar rounded-0 border" style="width:36px; height:36px; object-fit:cover;">
+                <div class="text-truncate flex-grow-1">
+                    <strong class="d-block text-dark small text-truncate mb-0">${client.name}</strong>
+                    <span class="x-small text-muted text-truncate d-block" style="font-size:9px;">${client.company}</span>
+                </div>
+            `;
+            item.addEventListener('click', () => {
+                activeChatClientId = clientId;
+                renderChatInterface();
+            });
+            list.appendChild(item);
+        });
+
+        const activeClient = clientMockData[activeChatClientId];
+        if (activeClient) {
+            const activeAvatar = document.getElementById('chat-active-avatar');
+            const activeTitle = document.getElementById('chat-active-title');
+            const activePulse = document.getElementById('chat-active-pulse');
+
+            if (activeAvatar) activeAvatar.innerHTML = activeClient.initials;
+            if (activeTitle) activeTitle.textContent = `${activeClient.name} (${activeClient.company})`;
+            if (activePulse) activePulse.className = 'pulse-dot text-success';
+
+            renderChatBubbles(activeChatClientId);
+        }
+    }
+}
+
+// Generate bubbles within the container
+function renderChatBubbles(clientId) {
+    const container = document.getElementById('chat-messages-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const chats = chatHistory[clientId] || [];
+
+    chats.forEach(chat => {
+        const isSentByMe = (currentWorkspaceMode === 'client' && chat.sender === 'client') || 
+                           (currentWorkspaceMode === 'admin' && chat.sender === 'illustrator');
+
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${isSentByMe ? 'sent' : 'received'}`;
+        bubble.innerHTML = `
+            <div>${chat.text}</div>
+            <span class="x-small mt-1 d-block text-end opacity-60" style="font-size: 8px;">${chat.time}</span>
+        `;
+        container.appendChild(bubble);
+    });
+
+    setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+    }, 50);
+}
+
+// Chat Send Submission Handler
+function handleChatSubmit(event) {
+    event.preventDefault();
+
+    const input = document.getElementById('chat-message-input');
+    if (!input || !input.value.trim()) return;
+
+    const messageText = input.value.trim();
+    const timeStr = getFormattedTimestamp();
+
+    let targetClient = 'john-doe';
+    if (currentWorkspaceMode === 'client') {
+        const activeBtn = document.querySelector('.client-switch-btn.active');
+        if (activeBtn) targetClient = activeBtn.getAttribute('data-client');
+    } else {
+        targetClient = activeChatClientId;
+    }
+
+    const senderRole = currentWorkspaceMode === 'client' ? 'client' : 'illustrator';
+
+    if (!chatHistory[targetClient]) chatHistory[targetClient] = [];
+    chatHistory[targetClient].push({
+        sender: senderRole,
+        text: messageText,
+        time: timeStr
+    });
+
+    renderChatBubbles(targetClient);
+    input.value = '';
+
+    // Dynamic AI Support Chat Simulation
+    if (currentWorkspaceMode === 'client') {
+        const typingIndicator = document.getElementById('chat-typing-indicator');
+        const typingText = document.getElementById('chat-typing-text');
+        
+        if (typingIndicator && typingText) {
+            typingIndicator.classList.remove('d-none');
+            typingText.textContent = 'Alex Mercer is analyzing drawing vectors...';
+        }
+
+        setTimeout(() => {
+            if (typingIndicator) typingIndicator.classList.add('d-none');
+
+            let responseText = "Got your request. I am locking this into the vector board to run USPTO margins inspections right away. I'll post updates shortly!";
+            if (messageText.toLowerCase().includes('figure') || messageText.toLowerCase().includes('fig')) {
+                responseText = "Acknowledged. I'll open up the technical layering vectors and verify all reference lines are fully closed and meet 37 CFR guidelines. Expect an updated set published in your Drafting Desk sandbox.";
+            } else if (messageText.toLowerCase().includes('revision') || messageText.toLowerCase().includes('change')) {
+                responseText = "Revision notes documented. I will adjust the hatch patterns, contour shading weight, and vector anchors in Figure 1.3 and publish Version 2 shortly.";
+            } else if (messageText.toLowerCase().includes('invoice') || messageText.toLowerCase().includes('pay')) {
+                responseText = "Thank you for the notification. Our secure ledger will automatically clear your active balance on receipt validation.";
+            }
+
+            chatHistory[targetClient].push({
+                sender: 'illustrator',
+                text: responseText,
+                time: getFormattedTimestamp()
+            });
+
+            renderChatBubbles(targetClient);
+            showSuccessToast('<i class="bi bi-chat-left-dots text-primary h5 mb-0"></i> New secure message from Illustrator Drafting Desk!');
+        }, 3000);
+    }
+}
+
+// Chat File Attachment Simulation
+function triggerChatFileSelect() {
+    const input = document.getElementById('chat-attachment-input');
+    if (input) input.click();
+}
+
+function handleChatAttachment(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const timeStr = getFormattedTimestamp();
+        
+        let targetClient = 'john-doe';
+        if (currentWorkspaceMode === 'client') {
+            const activeBtn = document.querySelector('.client-switch-btn.active');
+            if (activeBtn) targetClient = activeBtn.getAttribute('data-client');
+        } else {
+            targetClient = activeChatClientId;
+        }
+
+        const senderRole = currentWorkspaceMode === 'client' ? 'client' : 'illustrator';
+
+        chatHistory[targetClient].push({
+            sender: senderRole,
+            text: `<div class="d-flex align-items-center gap-2 border border-dark border-opacity-10 p-2 bg-light text-dark" style="font-size:0.75rem; text-decoration:none;">
+                    <i class="bi bi-paperclip h5 mb-0"></i>
+                    <div>
+                        <strong class="text-truncate d-block">${file.name}</strong>
+                        <span class="x-small text-muted">${(file.size / 1024).toFixed(1)} KB | Encrypted Doc</span>
+                    </div>
+                   </div>`,
+            time: timeStr
+        });
+
+        renderChatBubbles(targetClient);
+        showSuccessToast('<i class="bi bi-paperclip text-success h5 mb-0"></i> File Securely Uploaded to Chat thread.');
+    }
+}
+
