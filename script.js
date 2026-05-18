@@ -1319,7 +1319,7 @@ function renderFiguresWorkspace(projectId) {
             <div class="col-md-6 col-xl-3" id="figure-card-${fig.id}">
                 <div class="figure-review-card border border-dark border-opacity-10 bg-light p-3 position-relative transition-all h-100">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold text-dark small">${fig.label}</span>
+                        <span class="fw-bold text-dark small text-nowrap">${fig.label}</span>
                         <span class="status-badge ${badgeClass} x-small px-2 py-0" id="figure-badge-${fig.id}">${fig.status}</span>
                     </div>
                     <div class="figure-thumbnail bg-white border border-dark border-opacity-10 p-3 text-center mb-3 cursor-pointer" onclick="openLightbox('${projectId}-${fig.id}')">
@@ -2281,22 +2281,22 @@ function renderAdminOverview() {
                 const statusBadgeHTML = `<span class="status-badge ${p.badgeClass}">${p.badgeText}</span>`;
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
+                    <td data-label="Client">
+                        <div class="d-flex align-items-center gap-2 justify-content-end justify-content-md-start">
                             <img src="${client.avatarImg}" alt="${client.initials}" class="avatar rounded-0 border border-dark border-opacity-10" style="width:24px; height:24px; object-fit:cover;">
-                            <div>
+                            <div class="text-end text-md-start">
                                 <strong class="d-block x-small text-dark mb-0">${client.name}</strong>
                                 <span class="x-small text-muted" style="font-size: 9px;">${client.company}</span>
                             </div>
                         </div>
                     </td>
-                    <td>
+                    <td data-label="Project">
                         <strong class="d-block small text-dark">${p.title}</strong>
                         <span class="x-small text-muted">ID: ${p.id} | ${p.type} Patent</span>
                     </td>
-                    <td>${statusBadgeHTML}</td>
-                    <td><span class="badge bg-secondary rounded-0 px-2 py-1 x-small fw-bold text-dark">${p.figuresCount} Figures</span></td>
-                    <td><span class="x-small fw-bold text-dark">${p.targetDate}</span></td>
+                    <td data-label="Status">${statusBadgeHTML}</td>
+                    <td data-label="Figures"><span class="badge bg-secondary rounded-0 px-2 py-1 x-small fw-bold text-dark">${p.figuresCount} Figures</span></td>
+                    <td data-label="Deadline"><span class="x-small fw-bold text-dark">${p.targetDate}</span></td>
                 `;
                 workQueueBody.appendChild(row);
             });
@@ -2384,7 +2384,7 @@ function renderAdminProjectsDesk() {
             const isInDrafting = fig.status === 'In Drafting';
 
             const card = document.createElement('div');
-            card.className = 'col-md-6 col-xl-4';
+            card.className = 'col-md-4';
             card.innerHTML = `
                 <div class="stat-card p-0 border border-dark border-opacity-10 rounded-0 h-100 flex-column d-flex">
                     <div class="p-3 border-bottom border-dark border-opacity-10 d-flex justify-content-between align-items-center">
@@ -2482,7 +2482,7 @@ function renderAdminRequestsInbox() {
     grid.innerHTML = '';
     incomingRequests.forEach((req, idx) => {
         const card = document.createElement('div');
-        card.className = 'col-md-6 col-lg-4';
+        card.className = 'col-md-4';
         card.innerHTML = `
             <div class="stat-card p-0 border border-dark border-opacity-10 rounded-0 h-100 d-flex flex-column justify-content-between">
                 <div class="p-3 border-bottom border-dark border-opacity-10">
